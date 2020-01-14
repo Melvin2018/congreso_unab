@@ -2,21 +2,24 @@
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      style="font-size:20px"
       :clipped="$vuetify.breakpoint.lgAndUp"
       app
     >
-      <v-list dense>
-        <v-list-item link href="/">
-          <v-list-item-icon>
-            <v-img
-              height="30px"
-              width="30px"
-              src="https://cdn4.iconfinder.com/data/icons/election-world-color/64/senate-congress-government-senator-political-512.png"
-            ></v-img>
-          </v-list-item-icon>
-          <v-list-item-title>Congreso</v-list-item-title>
-        </v-list-item>
+      <v-list rounded>
+        <v-subheader>MENU</v-subheader>
+        <v-list-item-group v-model="opc" color="primary">
+          <v-list-item
+            link
+            v-for="opc in opciones"
+            :key="opc.ruta"
+            :href="opc.ruta"
+          >
+            <v-list-item-icon>
+              <v-img height="40px" width="40px" :src="opc.img"></v-img>
+            </v-list-item-icon>
+            <v-list-item-content>{{ opc.titulo }}</v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -33,13 +36,13 @@
       </template>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        Action Goal
+        Congreso UNAB
       </v-toolbar-title>
     </v-app-bar>
     <v-content>
       <v-container fluid>
         <v-slide-y-transition mode="out-in">
-          <router-view />
+          <router-view/>
         </v-slide-y-transition>
       </v-container>
     </v-content>
@@ -48,7 +51,34 @@
 <script>
 export default {
   data: () => ({
-    drawer: null
+    drawer: null,
+    opc: 0,
+    opciones: [
+      {
+        ruta: "/",
+        titulo: "Congreso",
+        img:
+          "https://cdn4.iconfinder.com/data/icons/election-world-color/64/senate-congress-government-senator-political-512.png"
+      },
+      {
+        ruta: "/",
+        titulo: "Estudiante",
+        img:
+          "https://cdn3.iconfinder.com/data/icons/education-179/64/x-04-512.png"
+      },
+      {
+        ruta: "/",
+        titulo: "Evento",
+        img:
+          "https://cdn2.iconfinder.com/data/icons/seo-and-web-optimization-vol-5-2/512/events_calendar-512.png"
+      },
+      {
+        ruta: "/",
+        titulo: "Estadisticas",
+        img:
+          "https://cdn0.iconfinder.com/data/icons/ikooni-outline-seo-web/128/seo2-39-512.png"
+      }
+    ]
   })
-}
+};
 </script>
