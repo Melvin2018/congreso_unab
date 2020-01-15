@@ -1,10 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-model="drawer"
-      :clipped="$vuetify.breakpoint.lgAndUp"
-      app
-    >
+    <v-navigation-drawer v-model="drawer" :clipped="true" app>
       <v-list rounded>
         <v-subheader>MENU</v-subheader>
         <v-list-item-group v-model="opc" color="primary">
@@ -23,7 +19,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
-      :clipped-left="$vuetify.breakpoint.lgAndUp"
+      :clipped-left="true"
       app
       dark
       src="https://picsum.photos/1920/1080?random"
@@ -42,7 +38,7 @@
     <v-content>
       <v-container fluid>
         <v-slide-y-transition mode="out-in">
-          <router-view/>
+          <router-view />
         </v-slide-y-transition>
       </v-container>
     </v-content>
@@ -61,24 +57,35 @@ export default {
           "https://cdn4.iconfinder.com/data/icons/election-world-color/64/senate-congress-government-senator-political-512.png"
       },
       {
-        ruta: "/",
+        ruta: "/estudiante/vista",
         titulo: "Estudiante",
         img:
           "https://cdn3.iconfinder.com/data/icons/education-179/64/x-04-512.png"
       },
       {
-        ruta: "/",
+        ruta: "/evento",
         titulo: "Evento",
         img:
           "https://cdn2.iconfinder.com/data/icons/seo-and-web-optimization-vol-5-2/512/events_calendar-512.png"
       },
       {
-        ruta: "/",
+        ruta: "/estadistica",
         titulo: "Estadisticas",
         img:
           "https://cdn0.iconfinder.com/data/icons/ikooni-outline-seo-web/128/seo2-39-512.png"
       }
     ]
-  })
+  }),
+  watch: {
+    opc: x => {
+      localStorage.setItem("opcion", x);
+    }
+  },
+  created() {
+    if (localStorage.getItem("opcion") != null) {
+      this.opc = parseInt(localStorage.getItem("opcion"), 10);
+      this.$router.push(this.opciones[this.opc].ruta);
+    }
+  }
 };
 </script>
