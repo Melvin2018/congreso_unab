@@ -84,7 +84,7 @@ export default {
   created() {
     if (localStorage.getItem("opcion") != null) {
       this.opc = parseInt(localStorage.getItem("opcion"), 10);
-      this.$router.push(this.opciones[this.opc].ruta);
+    //  this.$router.push(this.opciones[this.opc].ruta);
     }
   }
 };
