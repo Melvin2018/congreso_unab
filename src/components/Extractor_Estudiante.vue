@@ -27,7 +27,12 @@
             ></v-file-input>
             <xlsx-read :file="file">
               <template #default="{loading}">
-                <span v-if="loading">Loading...</span>
+                <v-row v-if="loading" justify="center">
+                  <v-progress-circular
+                    indeterminate
+                  color="primary"
+                  ></v-progress-circular>
+                </v-row>
                 <xlsx-json v-else>
                   <template #default="{collection}">
                     <v-col v-if="validar(collection)">

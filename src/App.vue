@@ -63,7 +63,7 @@ export default {
           "https://cdn3.iconfinder.com/data/icons/education-179/64/x-04-512.png"
       },
       {
-        ruta: "/evento",
+        ruta: "/evento/vista",
         titulo: "Evento",
         img:
           "https://cdn2.iconfinder.com/data/icons/seo-and-web-optimization-vol-5-2/512/events_calendar-512.png"

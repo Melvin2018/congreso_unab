@@ -4,7 +4,7 @@
       <v-card-title class="blue lighten-1 justify-center">
         <v-row justify="center">
           <v-col>
-            <v-btn fab color="secondary" @click="agregar()"
+            <v-btn fab color="secondary" @click="onClick"
               ><v-icon>mdi-plus</v-icon></v-btn
             >
           </v-col>
@@ -16,7 +16,7 @@
               width="40px"
             />
             <h2 class="display-1 white--text font-weight-light">
-              Lista de estudiantes
+              Eventos actuales
             </h2>
           </v-row>
           <v-spacer></v-spacer>
@@ -25,14 +25,14 @@
             label="busqueda"
             outlined
             dark
-           color="secondary"
+            color="secondary"
             append-icon="mdi-magnify"
           ></v-text-field>
         </v-row>
       </v-card-title>
       <v-data-table
         :headers="columnas"
-        :items="estudiantes"
+        :items="eventos"
         :search="busqueda"
         :page.sync="pagina"
         :items-per-page="10"
@@ -57,50 +57,29 @@
     </v-card>
   </v-container>
 </template>
-
 <script>
 export default {
   data: () => ({
     load: true,
     pagina: 1,
     numPagina: 0,
-    estudiantes: [
-      {
-        id: 1,
-        nombre: "melvin",
-        codigo: "98736256378",
-        carrera: "ingenieria en sistemas",
-        regional: "sm"
-      },
-      {
-        id: 2,
-        nombre: "gaby",
-        codigo: "43598384985",
-        carrera: "ingenieria en sistemas",
-        regional: "ch"
-      },
-      {
-        id: 3,
-        nombre: "nadie",
-        codigo: "rew545325",
-        carrera: "ingenieria en sistemas",
-        regional: "ss"
-      }
-    ],
+    eventos: [],
     busqueda: "",
     columnas: [
       { text: "Nombre", align: "center", value: "nombre" },
-      { text: "Codigo", align: "center", value: "codigo" },
-      { text: "Carrera", align: "center", value: "carrera" },
-      { text: "Reginal", align: "center", value: "reginal" },
+      { text: "fecha", align: "center", value: "fecha" },
+      { text: "estudiantes", align: "center", value: "est" },
+      { text: "N. Asistencia", align: "center", value: "asistencia" },
+      { text: "Precio", align: "center", value: "precio" },
       { text: "Opcion", align: "center", value: "opciones" }
     ]
   }),
   methods: {
-    agregar() {
-      this.$router.push("/estudiante/importacion");
+    onClick() {
+      this.$router.push("/evento/nuevo");
     }
   }
 };
 </script>
+
 <style></style>
