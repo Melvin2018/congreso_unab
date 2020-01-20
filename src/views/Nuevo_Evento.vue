@@ -10,7 +10,7 @@
               width="40px"
             />
             <h2 class="display-1 white--text font-weight-light">
-              Nuevo evento
+              Nuevo congreso
             </h2>
           </v-row>
         </v-card-title>
@@ -93,7 +93,8 @@ export default {
     evento: {
       nombre: "",
       fecha: new Date().toISOString().substr(0, 10),
-      precio: 1
+      precio: 65,
+      fondo:'http://www.fundacionindex.com/blog_oebe/wp-content/uploads/2018/05/solucion-organizacional-organizational-problem-solving-300x171.jpg'
     },
     nombreRol: [v => !!v || "Nombre obligatorio"],
     precioRol: [
@@ -103,9 +104,10 @@ export default {
     ]
   }),
   methods: {
-    onClick() {
+    async onClick() {
       if (this.$refs.form.validate()) {
-        alert(JSON.stringify(this.evento));
+        const URL = this.$path + "/api/congresos";
+        await this.$axios.post(URL, this.evento).catch(e => console.log(e));
       }
     },
     async reset() {

@@ -52,7 +52,7 @@ export default {
     opciones: [
       {
         ruta: "/evento/vista",
-        titulo: "Congreso",
+        titulo: "Congresos",
         img:
           "https://cdn4.iconfinder.com/data/icons/election-world-color/64/senate-congress-government-senator-political-512.png"
       },

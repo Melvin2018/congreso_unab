@@ -16,7 +16,7 @@
               width="40px"
             />
             <h2 class="display-1 white--text font-weight-light">
-              Eventos actuales
+              Congresos
             </h2>
           </v-row>
           <v-spacer></v-spacer>
@@ -30,70 +30,127 @@
           ></v-text-field>
         </v-row>
       </v-card-title>
-      <v-data-table
-        :headers="columnas"
-        :items="eventos"
-        :search="busqueda"
-        :page.sync="pagina"
-        :items-per-page="10"
-        hide-default-footer
-        class="elevation-1"
-        @page-count="numPagina = $event"
-      >
-        <template v-slot:item.est="{ item }">
-          <v-btn @click="listarEstudiante(item.id)" rounded>
-          
-              <v-img
-                src="https://cdn1.iconfinder.com/data/icons/delivery-logistics/512/shopping_list-256.png"
-                height="30"
-                width="30"
-              /></v-btn>
-        </template>
-        <template v-slot:item.opciones="{ item }">
-          <v-row align="center" justify="center">
-            <v-btn fab @click="editar(item.id)">
-              <v-icon>mdi-sync</v-icon></v-btn
-            >
-            <v-btn fab @click="eliminar(item.id)" style="margin-left:2%">
-              <v-icon>mdi-delete</v-icon></v-btn
-            >
-          </v-row>
-        </template>
-      </v-data-table>
-      <div class="text-center pt-2">
-        <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
-      </div>
+      <v-card>
+        <v-card-title class="gray lighten-1">
+          <v-tabs fixed-tabs v-model="tabs" centered>
+            <v-tab>Activos</v-tab>
+            <v-tab>inactivos</v-tab>
+          </v-tabs>
+        </v-card-title>
+        <v-card-text>
+          <v-tabs-items v-model="tabs">
+            <v-tab-item>
+              <v-container fluid>
+                <v-row dense>
+                  <v-col v-for="evento in activos" :key="evento.id" :cols="12">
+                    <v-card class="mx-auto width">
+                      <v-img
+                        class="white--text align-end"
+                        :src="evento.fondo"
+                        height="250px"
+                      >
+                        <v-card-title
+                          ><h3>{{ evento.nombre }}</h3>
+                          <v-spacer></v-spacer>
+                          <h3>{{ evento.fecha }}</h3>
+                        </v-card-title>
+                      </v-img>
+
+                      <v-card-actions>
+                        <h2>{{ evento.nombre }}</h2>
+                        <v-spacer></v-spacer>
+                        <v-btn rounded>
+                          <v-icon>mdi-file-export</v-icon>
+                          estudiantes
+                        </v-btn>
+                        <v-btn rounded>
+                          <v-icon>mdi-clipboard-list</v-icon>
+                          personal
+                        </v-btn>
+                        <v-btn rounded>
+                          <v-icon>mdi-graph</v-icon>
+                          estadisticas
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
+            <v-tab-item>
+              <v-container fluid>
+                <v-row dense>
+                  <v-col
+                    v-for="evento in inactivos"
+                    :key="evento.id"
+                    :cols="12"
+                  >
+                    <v-card class="mx-auto" max-width="1000">
+                      <v-img :src="evento.fondo" height="200px">
+                        <v-container fill-height fluid pa-2>
+                          <v-layout fill-height>
+                            <v-flex xs12 align-end flexbox>
+                              <span
+                                class="headline white--text"
+                                v-text="evento.nombre"
+                              ></span>
+                            </v-flex>
+                          </v-layout>
+                        </v-container>
+                      </v-img>
+
+                      <v-card-actions>
+                        <v-btn color="secondary" rounded>
+                          <v-icon>mdi-file-export</v-icon>
+                          exportar
+                        </v-btn>
+                        <v-btn color="secondary" rounded>
+                          <v-icon>mdi-clipboard-list</v-icon>
+                          listar
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                      </v-card-actions>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-card-text>
+      </v-card>
     </v-card>
   </v-container>
 </template>
 <script>
 export default {
+  computed: {
+    activos() {
+      return this.eventos.filter(x => x.estado === 1);
+    },
+    inactivos() {
+      return this.eventos.filter(x => x.estado === 0);
+    }
+  },
   data: () => ({
     load: true,
+    tabs: null,
     pagina: 1,
     numPagina: 0,
-    eventos: [
-      {
-        id: 1,
-        nombre: "congreso enfermeria",
-        fecha: "2020-10-13",
-        precio: 50,
-        asistencia: 20
-      }
-    ],
-    busqueda: "",
-    columnas: [
-      { text: "Nombre", align: "center", value: "nombre" },
-      { text: "fecha", align: "center", value: "fecha" },
-      { text: "estudiantes", align: "center", value: "est" },
-      { text: "N. Asistencia", align: "center", value: "asistencia" },
-      { text: "Precio", align: "center", value: "precio" },
-      { text: "Opcion", align: "center", value: "opciones" }
-    ]
+    eventos: [],
+    busqueda: ""
   }),
   methods: {
     onClick() {
       this.$router.push("/evento/nuevo");
+    },
+    async listar() {
+      const URL = this.$path + "/api/congresos";
+      await this.$axios
+        .get(URL)
+        .then(response => {
+          this.eventos = response.data;
+        })
+        .catch(e => console.log(e));
     },
     listarEstudiante(estudiante) {
       this.$router.push({
@@ -103,8 +160,15 @@ export default {
         }
       });
     }
+  },
+  mounted() {
+    this.listar();
   }
 };
 </script>
 
-<style></style>
+<style>
+.width {
+  width: 80%;
+}
+</style>
