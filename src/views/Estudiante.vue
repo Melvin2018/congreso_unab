@@ -25,7 +25,7 @@
             label="busqueda"
             outlined
             dark
-           color="secondary"
+            color="secondary"
             append-icon="mdi-magnify"
           ></v-text-field>
         </v-row>

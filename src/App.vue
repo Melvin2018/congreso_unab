@@ -51,22 +51,16 @@ export default {
     opc: 0,
     opciones: [
       {
-        ruta: "/",
+        ruta: "/evento/vista",
         titulo: "Congreso",
         img:
           "https://cdn4.iconfinder.com/data/icons/election-world-color/64/senate-congress-government-senator-political-512.png"
       },
       {
-        ruta: "/estudiante/vista",
-        titulo: "Estudiante",
+        ruta: "/configuracion",
+        titulo: "Administracion",
         img:
-          "https://cdn3.iconfinder.com/data/icons/education-179/64/x-04-512.png"
-      },
-      {
-        ruta: "/evento/vista",
-        titulo: "Evento",
-        img:
-          "https://cdn2.iconfinder.com/data/icons/seo-and-web-optimization-vol-5-2/512/events_calendar-512.png"
+          "https://cdn3.iconfinder.com/data/icons/banking-flat/614/981_-_Administration-512.png"
       },
       {
         ruta: "/estadistica",
@@ -84,7 +78,7 @@ export default {
   created() {
     if (localStorage.getItem("opcion") != null) {
       this.opc = parseInt(localStorage.getItem("opcion"), 10);
-    //  this.$router.push(this.opciones[this.opc].ruta);
+      //  this.$router.push(this.opciones[this.opc].ruta);
     }
   }
 };

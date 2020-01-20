@@ -40,6 +40,15 @@
         class="elevation-1"
         @page-count="numPagina = $event"
       >
+        <template v-slot:item.est="{ item }">
+          <v-btn @click="listarEstudiante(item.id)" rounded>
+          
+              <v-img
+                src="https://cdn1.iconfinder.com/data/icons/delivery-logistics/512/shopping_list-256.png"
+                height="30"
+                width="30"
+              /></v-btn>
+        </template>
         <template v-slot:item.opciones="{ item }">
           <v-row align="center" justify="center">
             <v-btn fab @click="editar(item.id)">
@@ -63,7 +72,15 @@ export default {
     load: true,
     pagina: 1,
     numPagina: 0,
-    eventos: [],
+    eventos: [
+      {
+        id: 1,
+        nombre: "congreso enfermeria",
+        fecha: "2020-10-13",
+        precio: 50,
+        asistencia: 20
+      }
+    ],
     busqueda: "",
     columnas: [
       { text: "Nombre", align: "center", value: "nombre" },
@@ -77,6 +94,14 @@ export default {
   methods: {
     onClick() {
       this.$router.push("/evento/nuevo");
+    },
+    listarEstudiante(estudiante) {
+      this.$router.push({
+        name: "estudianteCongreso",
+        params: {
+          id: estudiante
+        }
+      });
     }
   }
 };

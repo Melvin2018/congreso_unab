@@ -17,13 +17,13 @@ const routes = [{
         path: "/estudiante/importacion",
         name: "importacion",
         component: () =>
-            import ("../components/Extractor_Estudiante.vue")
+            import ("../views/Extractor_Estudiante.vue")
     },
     {
         path: "/evento/nuevo",
         name: "nuevoEvento",
         component: () =>
-            import ("../components/Nuevo_Evento.vue")
+            import ("../views/Nuevo_Evento.vue")
     }
 ];
 const router = new VueRouter({

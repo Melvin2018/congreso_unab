@@ -55,7 +55,7 @@
             </v-col>
             <v-col cols="12" sm="6" md="8">
               <v-text-field
-                v-model="evento.precio"
+                v-model.number="evento.precio"
                 type="number"
                 :counter="3"
                 prepend-icon="mdi-cash-multiple"
@@ -98,7 +98,7 @@ export default {
     nombreRol: [v => !!v || "Nombre obligatorio"],
     precioRol: [
       v => !!v || "Precio obligatorio",
-      v => (v && v.length <= 3) || "Sobrepaso de caracteres",
+      v => (v && v < 1000) || "Sobrepaso de caracteres",
       v => (v && v > 0) || "debe escribir un numero positivo"
     ]
   }),
