@@ -59,17 +59,21 @@
                       <v-card-actions>
                         <h2>{{ evento.nombre }}</h2>
                         <v-spacer></v-spacer>
-                        <v-btn rounded>
+                        <v-btn rounded @click="listar(evento, 'estudiante')">
                           <v-icon>mdi-file-export</v-icon>
                           estudiantes
                         </v-btn>
-                        <v-btn rounded>
+                        <v-btn rounded @click="listar(evento, 'personal')">
                           <v-icon>mdi-clipboard-list</v-icon>
                           personal
                         </v-btn>
-                        <v-btn rounded>
+                        <v-btn rounded @click="listar(evento, 'estadistica')">
                           <v-icon>mdi-graph</v-icon>
                           estadisticas
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn rounded @click="eliminar(evento)" color="red">
+                          <v-icon>mdi-delete</v-icon>
                         </v-btn>
                       </v-card-actions>
                     </v-card>
@@ -85,30 +89,34 @@
                     :key="evento.id"
                     :cols="12"
                   >
-                    <v-card class="mx-auto" max-width="1000">
-                      <v-img :src="evento.fondo" height="200px">
-                        <v-container fill-height fluid pa-2>
-                          <v-layout fill-height>
-                            <v-flex xs12 align-end flexbox>
-                              <span
-                                class="headline white--text"
-                                v-text="evento.nombre"
-                              ></span>
-                            </v-flex>
-                          </v-layout>
-                        </v-container>
+                    <v-card class="mx-auto width">
+                      <v-img
+                        class="white--text align-end"
+                        :src="evento.fondo"
+                        height="250px"
+                      >
+                        <v-card-title
+                          ><h3>{{ evento.nombre }}</h3>
+                          <v-spacer></v-spacer>
+                          <h3>{{ evento.fecha }}</h3>
+                        </v-card-title>
                       </v-img>
 
                       <v-card-actions>
-                        <v-btn color="secondary" rounded>
-                          <v-icon>mdi-file-export</v-icon>
-                          exportar
-                        </v-btn>
-                        <v-btn color="secondary" rounded>
-                          <v-icon>mdi-clipboard-list</v-icon>
-                          listar
-                        </v-btn>
+                        <h2>{{ evento.nombre }}</h2>
                         <v-spacer></v-spacer>
+                        <v-btn rounded @click="listar(evento, 'estudiante')">
+                          <v-icon>mdi-file-export</v-icon>
+                          estudiantes
+                        </v-btn>
+                        <v-btn rounded @click="listar(evento, 'personal')">
+                          <v-icon>mdi-clipboard-list</v-icon>
+                          personal
+                        </v-btn>
+                        <v-btn rounded @click="listar(evento, 'estadistica')">
+                          <v-icon>mdi-graph</v-icon>
+                          estadisticas
+                        </v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-col>
@@ -143,30 +151,36 @@ export default {
     onClick() {
       this.$router.push("/evento/nuevo");
     },
-    async listar() {
-      const URL = this.$path + "/api/congresos";
-      await this.$axios
-        .get(URL)
+    eliminar(congreso) {
+      const URL = this.$path + "congresos";
+      console.log(URL);
+      this.$axios
+        .delete(this.$path.concat("congresos/").concat(congreso.id))
+        .catch(e => console.log(e));
+    },
+    listarEventos() {
+      const URL = this.$path + "congresos";
+      this.$axios
+        .get(this.$path.concat("congresos"))
         .then(response => {
           this.eventos = response.data;
         })
         .catch(e => console.log(e));
     },
-    listarEstudiante(estudiante) {
+    listar(congreso, nombre) {
       this.$router.push({
-        name: "estudianteCongreso",
+        name: nombre,
         params: {
-          id: estudiante
+          congreso: congreso.id
         }
       });
     }
   },
   mounted() {
-    this.listar();
+    this.listarEventos();
   }
 };
 </script>
-
 <style>
 .width {
   width: 80%;

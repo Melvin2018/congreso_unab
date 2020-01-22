@@ -3,11 +3,10 @@
     <v-card>
       <v-card-title class="blue lighten-1 justify-center">
         <v-row justify="center">
-          <v-col>
-            <v-btn fab color="secondary" @click="agregar()"
-              ><v-icon>mdi-plus</v-icon></v-btn
-            >
-          </v-col>
+          <v-row justify="center">
+            <v-btn fab @click="agregar()"><v-icon>mdi-import</v-icon></v-btn>
+            <v-btn fab @click="agregar()"><v-icon>mdi-export</v-icon></v-btn>
+          </v-row>
           <v-spacer></v-spacer>
           <v-row align="center" justify="center">
             <img
@@ -25,35 +24,36 @@
             label="busqueda"
             outlined
             dark
-            color="secondary"
             append-icon="mdi-magnify"
           ></v-text-field>
         </v-row>
       </v-card-title>
-      <v-data-table
-        :headers="columnas"
-        :items="estudiantes"
-        :search="busqueda"
-        :page.sync="pagina"
-        :items-per-page="10"
-        hide-default-footer
-        class="elevation-1"
-        @page-count="numPagina = $event"
-      >
-        <template v-slot:item.opciones="{ item }">
-          <v-row align="center" justify="center">
-            <v-btn fab @click="editar(item.id)">
-              <v-icon>mdi-sync</v-icon></v-btn
-            >
-            <v-btn fab @click="eliminar(item.id)" style="margin-left:2%">
-              <v-icon>mdi-delete</v-icon></v-btn
-            >
-          </v-row>
-        </template>
-      </v-data-table>
-      <div class="text-center pt-2">
-        <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
-      </div>
+      <v-card-text>
+        <v-data-table
+          :headers="columnas"
+          :items="estudiantes"
+          :search="busqueda"
+          :page.sync="pagina"
+          :items-per-page="10"
+          hide-default-footer
+          class="elevation-1"
+          @page-count="numPagina = $event"
+        >
+          <template v-slot:item.opciones="{ item }">
+            <v-row align="center" justify="center">
+              <v-btn fab @click="editar(item.id)">
+                <v-icon>mdi-sync</v-icon></v-btn
+              >
+              <v-btn fab @click="eliminar(item.id)" style="margin-left:2%">
+                <v-icon>mdi-delete</v-icon></v-btn
+              >
+            </v-row>
+          </template>
+        </v-data-table>
+        <div class="text-center pt-2">
+          <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
+        </div>
+      </v-card-text>
     </v-card>
   </v-container>
 </template>
@@ -99,8 +99,24 @@ export default {
   methods: {
     agregar() {
       this.$router.push("/estudiante/importacion");
+    },
+    listar(congreso) {
+      const URL = this.$path + "estudiantes/" + congreso;
+      this.$axios
+        .get(URL)
+        .then(response => {
+          this.estudiantes = response.data;
+        })
+        .catch(e => console.log(e));
     }
+  },
+  mounted() {
+    this.listar(this.$route.params.congreso);
   }
 };
 </script>
-<style></style>
+<style>
+button {
+  margin-left: 1.5%;
+}
+</style>

@@ -94,7 +94,8 @@ export default {
       nombre: "",
       fecha: new Date().toISOString().substr(0, 10),
       precio: 65,
-      fondo:'http://www.fundacionindex.com/blog_oebe/wp-content/uploads/2018/05/solucion-organizacional-organizational-problem-solving-300x171.jpg'
+      fondo:
+        "http://www.fundacionindex.com/blog_oebe/wp-content/uploads/2018/05/solucion-organizacional-organizational-problem-solving-300x171.jpg"
     },
     nombreRol: [v => !!v || "Nombre obligatorio"],
     precioRol: [
@@ -106,8 +107,9 @@ export default {
   methods: {
     async onClick() {
       if (this.$refs.form.validate()) {
-        const URL = this.$path + "/api/congresos";
+        const URL = this.$path + "congresos";
         await this.$axios.post(URL, this.evento).catch(e => console.log(e));
+        this.$router.push("/evento/vista");
       }
     },
     async reset() {

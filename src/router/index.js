@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
 const routes = [{
-        path: "/estudiante/vista",
+        path: "/estudiante/vista/:congreso",
         name: "estudiante",
         component: () =>
             import ("../views/Estudiante.vue")
@@ -17,7 +17,7 @@ const routes = [{
         path: "/estudiante/importacion",
         name: "importacion",
         component: () =>
-            import ("../views/Extractor_Estudiante.vue")
+            import ("../views/Importar_Estudiante.vue")
     },
     {
         path: "/evento/nuevo",
