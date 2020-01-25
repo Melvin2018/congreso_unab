@@ -38,6 +38,12 @@
           </v-tabs>
         </v-card-title>
         <v-card-text>
+          <div class="text-center" v-if="load">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </div>
           <v-tabs-items v-model="tabs">
             <v-tab-item>
               <v-container fluid>
@@ -151,21 +157,23 @@ export default {
     onClick() {
       this.$router.push("/evento/nuevo");
     },
-    eliminar(congreso) {
+    async eliminar(congreso) {
       const URL = this.$path + "congresos";
-      console.log(URL);
-      this.$axios
-        .delete(this.$path.concat("congresos/").concat(congreso.id))
+      await this.$axios
+        .delete(this.$path.concat("congresos?id=").concat(congreso.id))
         .catch(e => console.log(e));
+      this.eventos.splice(this.eventos.indexOf(congreso), 1);
     },
-    listarEventos() {
+    async listarEventos() {
+      this.load = true;
       const URL = this.$path + "congresos";
-      this.$axios
+      await this.$axios
         .get(this.$path.concat("congresos"))
         .then(response => {
           this.eventos = response.data;
         })
         .catch(e => console.log(e));
+      this.load = false;
     },
     listar(congreso, nombre) {
       this.$router.push({

@@ -14,12 +14,6 @@ const routes = [{
             import ("../views/Evento.vue")
     },
     {
-        path: "/estudiante/importacion",
-        name: "importacion",
-        component: () =>
-            import ("../views/Importar_Estudiante.vue")
-    },
-    {
         path: "/evento/nuevo",
         name: "nuevoEvento",
         component: () =>

@@ -1,5 +1,8 @@
 <template>
-  <v-container>
+  <v-dialog v-model="dialogo" persistent max-width="1000">
+    <template v-slot:activator="{ on }">
+      <v-btn v-on="on" fab style="margin-left:7%"><v-icon>mdi-import</v-icon></v-btn>
+    </template>
     <v-col>
       <v-card>
         <v-card-title class="blue lighten-1 justify-center">
@@ -30,7 +33,7 @@
                 <v-row v-if="loading" justify="center">
                   <v-progress-circular
                     indeterminate
-                  color="primary"
+                    color="primary"
                   ></v-progress-circular>
                 </v-row>
                 <xlsx-json v-else>
@@ -40,7 +43,7 @@
                         :headers="columnas"
                         :items="collection"
                         :page.sync="pagina"
-                        :items-per-page="10"
+                        :items-per-page="7"
                         hide-default-footer
                         class="elevation-1"
                         @page-count="numPagina = $event"
@@ -55,6 +58,12 @@
                           :length="numPagina"
                         ></v-pagination>
                       </div>
+                      <v-row align="center" justify="center">
+                        <v-spacer></v-spacer>
+                        <v-btn dark @click="importar()" :loading="load"
+                          ><v-icon>mdi-location-enter</v-icon>importar</v-btn
+                        >
+                      </v-row>
                     </v-col>
                     <v-alert prominent type="error" v-else-if="collection">
                       <v-row align="center">
@@ -69,7 +78,7 @@
         </v-card-text>
       </v-card>
     </v-col>
-  </v-container>
+  </v-dialog>
 </template>
 <script>
 import { XlsxRead, XlsxJson } from "vue-xlsx/dist/vue-xlsx.es.js";
@@ -78,9 +87,28 @@ export default {
     XlsxRead,
     XlsxJson
   },
+  props: {
+    dialog: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    idcongreso: {
+      type: Number,
+      required: true,
+      default: 0
+    }
+  },
+  watch: {
+    dialog: x => (this.dialogo = x)
+  },
   data: () => ({
+    dialogo: false,
+    load: false,
     file: null,
     pagina: 1,
+    carreras: [],
+    regionales: [],
     valido: false,
     mensaje: "",
     datos: [],
@@ -94,9 +122,60 @@ export default {
     ]
   }),
   methods: {
-    onClick(json) {
-      this.datos = json;
-      console.log(this.datos[0]);
+    async importar() {
+      this.load = true;
+      const URL = this.$path + "estudiantes_congreso";
+      const lista = this.convertir();
+      await this.$axios.post(URL, lista).catch(e => console.log(e));
+      this.load = false;
+      this.dialogo = false;
+    },
+    async convertir() {
+      const lista = [];
+      let cambio = this.validarCarrera();
+      if (cambio) {
+        this.refrescar();
+      }
+      this.datos.forEach(x => {
+        lista.push({
+          abono: x.abono,
+          estudiante: {
+            nombre: x.nombre,
+            codigo: x.codigo,
+            carrera: carreras.find(c => c.nombre == x.carrera).id,
+            regional: regionales.find(c => c.alias === x.regional).id
+          },
+          congreso: this.idcongreso
+        });
+      });
+      return lista;
+    },
+    async refrescar() {
+      const URL = this.$path + "carreras";
+      await this.$axios
+        .get(URL)
+        .then(response => {
+          this.carreras = response.data;
+        })
+        .catch(e => console.log(e));
+    },
+    validarCarrera() {
+      let cambio = false;
+      this.datos.forEach(x => {
+        if (this.carreras.find(c => c.nombre == x.carrera) === undefined) {
+          this.agregar(x.carrera, "carreras");
+          cambio = true;
+        }
+      });
+      return cambio;
+    },
+    async agregar(nombre) {
+      await this.$axios
+        .post(this.$path + "carreras", { nombre: nombre })
+        .then(response => {
+          return response.data;
+        })
+        .catch(e => console.log(e));
     },
     regional(texto) {
       switch (texto) {
@@ -158,11 +237,16 @@ export default {
             this.mensaje = texto;
           }
         } else {
+          this.datos = collection;
           return true;
         }
       }
       return false;
     }
+  },
+  mounted() {
+    this.carreras = Array.from(this.$store.state.carreras);
+    this.regionales = Array.from(this.$store.state.regionales);
   }
 };
 </script>

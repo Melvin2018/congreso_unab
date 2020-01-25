@@ -1,4 +1,5 @@
 import Vue from "vue";
+import Vuex from "vuex";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
@@ -11,6 +12,7 @@ Vue.prototype.$path = "http://206.189.206.157:8000/api/";
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
 Vue.use(vuetify);
+Vue.use(Vuex);
 new Vue({
     router,
     store,

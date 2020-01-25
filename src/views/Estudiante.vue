@@ -3,9 +3,18 @@
     <v-card>
       <v-card-title class="blue lighten-1 justify-center">
         <v-row justify="center">
-          <v-row justify="center">
-            <v-btn fab @click="agregar()"><v-icon>mdi-import</v-icon></v-btn>
-            <v-btn fab @click="agregar()"><v-icon>mdi-export</v-icon></v-btn>
+          <v-row justify="center" align="center">
+            <Importar
+              class="button"
+              :dialog="importar"
+              :idcongreso="parseInt(this.$route.params.congreso, 10)"
+              @click="agregar()"
+            ></Importar>
+            <Exportar
+              class="exportar"
+              nombre="Estudiantes"
+              :collection="collection"
+            ></Exportar>
           </v-row>
           <v-spacer></v-spacer>
           <v-row align="center" justify="center">
@@ -34,6 +43,8 @@
           :items="estudiantes"
           :search="busqueda"
           :page.sync="pagina"
+          :loading="load"
+          loading-text="cargando estudiantes"
           :items-per-page="10"
           hide-default-footer
           class="elevation-1"
@@ -57,66 +68,81 @@
     </v-card>
   </v-container>
 </template>
-
 <script>
+import Importar_Estudiante from "../components/Importar_Estudiante";
+import Exportar from "../components/Exportar";
 export default {
+  components: {
+    Importar: Importar_Estudiante,
+    Exportar
+  },
   data: () => ({
     load: true,
     pagina: 1,
     numPagina: 0,
-    estudiantes: [
-      {
-        id: 1,
-        nombre: "melvin",
-        codigo: "98736256378",
-        carrera: "ingenieria en sistemas",
-        regional: "sm"
-      },
-      {
-        id: 2,
-        nombre: "gaby",
-        codigo: "43598384985",
-        carrera: "ingenieria en sistemas",
-        regional: "ch"
-      },
-      {
-        id: 3,
-        nombre: "nadie",
-        codigo: "rew545325",
-        carrera: "ingenieria en sistemas",
-        regional: "ss"
-      }
-    ],
+    estudiantes: [],
+    collection: [],
+    importar: false,
     busqueda: "",
     columnas: [
       { text: "Nombre", align: "center", value: "nombre" },
       { text: "Codigo", align: "center", value: "codigo" },
       { text: "Carrera", align: "center", value: "carrera" },
-      { text: "Reginal", align: "center", value: "reginal" },
+      { text: "Regional", align: "center", value: "regional" },
       { text: "Opcion", align: "center", value: "opciones" }
     ]
   }),
   methods: {
     agregar() {
-      this.$router.push("/estudiante/importacion");
+      this.importar = !this.importar;
     },
-    listar(congreso) {
-      const URL = this.$path + "estudiantes/" + congreso;
-      this.$axios
+    async listar(congreso) {
+      const URL =
+        this.$path + "estudiantes_congreso?tipo=1&idCongreso=" + congreso;
+      await this.$axios
         .get(URL)
         .then(response => {
-          this.estudiantes = response.data;
+          this.llenar(response.data);
         })
         .catch(e => console.log(e));
+      this.load = false;
+    },
+    listaExtra() {
+      this.$axios
+        .get(this.$path + "carreras")
+        .then(response => {
+          this.$store.commit("carreras", response.data);
+        })
+        .catch(e => console.log(e));
+      this.$axios
+        .get(this.$path.concat("regionales"))
+        .then(response => {
+          this.$store.commit("regionales", response.data);
+        })
+        .catch(e => console.log(e));
+    },
+    llenar(lista) {
+      Array.from(lista).forEach(x => {
+        this.collection.push({
+          codigo: x.estudiante.codigo,
+          nombre: x.estudiante.nombre,
+          carrera: x.estudiante.carrera.nombre,
+          regional: x.estudiante.regional.nombre,
+          abono: x.abono
+        });
+        this.estudiantes.push({
+          id: x.estudiante.id,
+          codigo: x.estudiante.codigo,
+          nombre: x.estudiante.nombre,
+          carrera: x.estudiante.carrera.nombre,
+          regional: x.estudiante.regional.nombre
+        });
+      });
     }
   },
   mounted() {
     this.listar(this.$route.params.congreso);
+    this.listaExtra();
   }
 };
 </script>
-<style>
-button {
-  margin-left: 1.5%;
-}
-</style>
