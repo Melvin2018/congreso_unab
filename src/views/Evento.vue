@@ -1,31 +1,29 @@
 <template>
   <v-container>
-    <v-card>
-      <v-card-title class="blue lighten-1 justify-center">
+    <v-layout row wrap>
+      <v-flex>
+    <v-card  >
+      <v-card-title class="light-blue accent-3 justify-center">
         <v-row justify="center">
           <v-col>
-            <v-btn fab color="secondary" @click="onClick"
-              ><v-icon>mdi-plus</v-icon></v-btn
-            >
+            <v-btn fab x-large dark color="success" @click="onClick"
+              ><v-icon dark>mdi-domain</v-icon></v-btn>
           </v-col>
           <v-spacer></v-spacer>
           <v-row align="center" justify="center">
-            <img
-              src="https://cdn2.iconfinder.com/data/icons/unigrid-phantom-layout-vol-3/60/021_112_layout_wireframe_grid_search_list-512.png"
-              height="40px"
-              width="40px"
-            />
-            <h2 class="display-1 white--text font-weight-light">
+            
+            <v-spacer></v-spacer>
+            <h3 class="display-1 white--text font-weight-light">
               Congresos
-            </h2>
+            </h3>
           </v-row>
           <v-spacer></v-spacer>
           <v-text-field
             v-model="busqueda"
-            label="busqueda"
+            label="Busqueda"
             outlined
             dark
-            color="secondary"
+            color="#E0F7FA"
             append-icon="mdi-magnify"
           ></v-text-field>
         </v-row>
@@ -65,15 +63,15 @@
                       <v-card-actions>
                         <h2>{{ evento.nombre }}</h2>
                         <v-spacer></v-spacer>
-                        <v-btn rounded @click="listar(evento, 'estudiante')">
+                        <v-btn rounded @click="listar(evento, 'estudiante')" color="light-green darken-1">
                           <v-icon>mdi-file-export</v-icon>
                           estudiantes
                         </v-btn>
-                        <v-btn rounded @click="listar(evento, 'personal')">
+                        <v-btn rounded @click="listar(evento, 'personal')" color="blue">
                           <v-icon>mdi-clipboard-list</v-icon>
                           personal
                         </v-btn>
-                        <v-btn rounded @click="listar(evento, 'estadistica')">
+                        <v-btn rounded @click="listar(evento, 'estadistica')" color="orange">
                           <v-icon>mdi-graph</v-icon>
                           estadisticas
                         </v-btn>
@@ -111,15 +109,15 @@
                       <v-card-actions>
                         <h2>{{ evento.nombre }}</h2>
                         <v-spacer></v-spacer>
-                        <v-btn rounded @click="listar(evento, 'estudiante')">
+                        <v-btn rounded @click="listar(evento, 'estudiante')" color="light-green darken-1">
                           <v-icon>mdi-file-export</v-icon>
                           estudiantes
                         </v-btn>
-                        <v-btn rounded @click="listar(evento, 'personal')">
+                        <v-btn rounded @click="listar(evento, 'personal')" color="blue">
                           <v-icon>mdi-clipboard-list</v-icon>
                           personal
                         </v-btn>
-                        <v-btn rounded @click="listar(evento, 'estadistica')">
+                        <v-btn rounded @click="listar(evento, 'estadistica')" color="orange">
                           <v-icon>mdi-graph</v-icon>
                           estadisticas
                         </v-btn>
@@ -133,6 +131,8 @@
         </v-card-text>
       </v-card>
     </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 <script>

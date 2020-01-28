@@ -19,7 +19,7 @@
           <v-spacer></v-spacer>
           <v-row align="center" justify="center">
             <img
-              src="https://cdn2.iconfinder.com/data/icons/unigrid-phantom-layout-vol-3/60/021_112_layout_wireframe_grid_search_list-512.png"
+              src="https://cdn1.iconfinder.com/data/icons/streaming-services-2/256/TV_Schedule-512.png"
               height="40px"
               width="40px"
             />
