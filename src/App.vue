@@ -1,9 +1,13 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" :clipped="true" app>
-      <v-list rounded>
-        <v-subheader>MENU</v-subheader>
-        <v-list-item-group v-model="opc" color="primary">
+    <v-navigation-drawer v-model="drawer" :clipped="true" color="#F0FFFF" app
+    src="https://img.freepik.com/vector-gratis/fondo-degradado-concepto-tonos-verdes_23-2148387745.jpg?size=626&ext=jpg"
+    width="17%"
+    
+    >
+      <v-list square>
+        <v-subheader><h1>MENÚ</h1></v-subheader>
+        <v-list-item-group v-model="opc"  color="#F9FBE7">
           <v-list-item
             link
             v-for="opc in opciones"
@@ -17,24 +21,31 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
+
     </v-navigation-drawer>
+    
     <v-app-bar
       :clipped-left="true"
       app
+      color="#4CAF50"
       dark
-      src="https://picsum.photos/1920/1080?random"
+      shrink-on-scroll
+      prominent
+      fade-img-on-scroll
+      src="https://www.unab.edu.sv/wp-content/uploads/2017/10/MG_4175-web.jpg"
     >
       <template v-slot:img="{ props }">
         <v-img
           v-bind="props"
-          gradient="to top right, rgba(55,236,186,.7), rgba(25,32,72,.7)"
+          gradient="to top right, rgb(60, 179, 113), rgba(25,32,72,.7)"
         ></v-img>
       </template>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        Congreso UNAB
+        <h2>Administración de Congresos UNAB</h2>
       </v-toolbar-title>
     </v-app-bar>
+    
     <v-content>
       <v-container fluid>
         <v-slide-y-transition mode="out-in">
@@ -42,8 +53,25 @@
         </v-slide-y-transition>
       </v-container>
     </v-content>
+    
+    <template>
+  <v-footer 
+   padless
+   color="amber darken-1"
+   absolute
+   class="font-weight-medium"
+  >
+    <v-col
+      class="text-center"
+      cols="12"
+    >
+      {{ new Date().getFullYear() }} — <strong>UNAB</strong>
+    </v-col>
+  </v-footer>
+</template>
   </v-app>
 </template>
+
 <script>
 export default {
   data: () => ({
@@ -51,22 +79,28 @@ export default {
     opc: 0,
     opciones: [
       {
+        ruta: "/inicio/vista",
+        titulo: "Inicio",
+        img:
+          "https://cdn3.iconfinder.com/data/icons/education-vol-1-outline-1/96/Artboard_41-512.png"
+      },
+      {
         ruta: "/evento/vista",
         titulo: "Congresos",
         img:
-          "https://cdn4.iconfinder.com/data/icons/election-world-color/64/senate-congress-government-senator-political-512.png"
+          "https://cdn3.iconfinder.com/data/icons/election-world-1/64/senate-congress-government-senator-political-512.png"
       },
       {
         ruta: "/configuracion",
         titulo: "Administracion",
         img:
-          "https://cdn3.iconfinder.com/data/icons/banking-flat/614/981_-_Administration-512.png"
+          "https://cdn0.iconfinder.com/data/icons/miscellaneous-21-line/128/administration_regime_people_admin-512.png"
       },
       {
         ruta: "/estadistica",
         titulo: "Estadisticas",
         img:
-          "https://cdn0.iconfinder.com/data/icons/ikooni-outline-seo-web/128/seo2-39-512.png"
+          "https://cdn2.iconfinder.com/data/icons/essential-web-1-1/50/lesson-presentation-keynote-report-statistics-512.png"
       }
     ]
   }),
@@ -83,3 +117,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.border {
+  border: 2px dashed rgba(20, 200, 212, 0.63);
+}
+
+</style>
