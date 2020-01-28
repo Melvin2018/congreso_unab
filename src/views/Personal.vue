@@ -12,8 +12,8 @@
             ></Importar>
             <Exportar
               class="exportar"
-              :nombre="congreso"
-              :datos="excel"
+              :nombre="titulo"
+              :collection="excel"
             ></Exportar>
           </v-row>
           <v-spacer></v-spacer>
@@ -40,7 +40,7 @@
       <v-card-text>
         <v-data-table
           :headers="columnas"
-          :items="estudiantes"
+          :items="personal"
           :search="busqueda"
           :page.sync="pagina"
           :loading="load"
@@ -76,25 +76,18 @@ export default {
     Importar: Importar_Estudiante,
     Exportar
   },
-  whatch:{
-    estudiantes:(x)=>{
-      this.exportacion();
-    }
-  },
   data: () => ({
     load: true,
     pagina: 1,
     numPagina: 0,
-    estudiantes: [],
+    personal: [],
     excel: [],
     congreso: "",
     importar: false,
     busqueda: "",
     columnas: [
       { text: "Nombre", align: "center", value: "nombre" },
-      { text: "Codigo", align: "center", value: "codigo" },
-      { text: "Carrera", align: "center", value: "carrera" },
-      { text: "Regional", align: "center", value: "regional" },
+      { text: "Funcion", align: "center", value: "funcion" },
       { text: "Opcion", align: "center", value: "opciones" }
     ]
   }),
@@ -103,8 +96,7 @@ export default {
       this.importar = !this.importar;
     },
     async listar(congreso) {
-      const URL =
-        this.$path + "estudiantes_congreso?tipo=1&idCongreso=" + congreso;
+      const URL = this.$path + "personal_congreso?idCongreso=" + congreso;
       await this.$axios
         .get(URL)
         .then(response => {
@@ -113,51 +105,34 @@ export default {
         .catch(e => console.log(e));
       this.load = false;
     },
-    listaExtra() {
-      this.$axios
-        .get(this.$path + "carreras")
-        .then(response => {
-          this.$store.commit("carreras", response.data);
-        })
-        .catch(e => console.log(e));
-      this.$axios
-        .get(this.$path.concat("regionales"))
-        .then(response => {
-          this.$store.commit("regionales", response.data);
-        })
-        .catch(e => console.log(e));
-    },
     llenar(lista) {
-    const listado=Array.from(lista);
-      if (listado.length > 0) {
+      if (lista.length > 0) {
         this.congreso = lista[0].nombre;
       }
-      listado.forEach(x => {
-        this.estudiantes.push({
-          codigo: x.estudiante.codigo,
-          nombre: x.estudiante.nombre,
-          carrera: x.estudiante.carrera.nombre,
-          regional: x.estudiante.regional.nombre,
-          abono: x.abono
+      Array.from(lista).forEach(x => {
+        this.personal.push({
+          nombre: x.personal.nombre,
+          abono: x.personal.funcion
         });
       });
     },
     exportacion() {
       this.excel.push({
-        nombre: "resumen_estudiante",
+        nombre: "resumen_personal",
         datos: [
           { detalle: "esperados", cantidad: 12 },
           { detalle: "registrados", cantidad: 12 }
         ]
       });
       this.excel.push({
-        nombre: "estudiantes",
-        datos: this.estudiantes
+        nombre: "personal",
+        datos: this.personal
       });
     }
   },
   mounted() {
     this.listar(this.$route.params.congreso);
+    this.exportacion();
     this.listaExtra();
   }
 };

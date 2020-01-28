@@ -8,6 +8,12 @@ const routes = [{
             import ("../views/Estudiante.vue")
     },
     {
+        path: "/personal/vista/:congreso",
+        name: "personal",
+        component: () =>
+            import ("../views/Personal.vue")
+    },
+    {
         path: "/evento/vista",
         name: "evento",
         component: () =>
