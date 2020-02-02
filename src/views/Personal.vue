@@ -70,7 +70,7 @@
 </template>
 <script>
 import Importar_Estudiante from "../components/Importar_Estudiante";
-import Exportar from "../components/Exportar";
+import Exportar from "../components/ExportarPDF";
 export default {
   components: {
     Importar: Importar_Estudiante,

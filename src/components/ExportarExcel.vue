@@ -1,14 +1,13 @@
 <template>
-  <v-row v-if="datos" style="margin-left:5%">
-    <xlsx-workbook @change="creado = !creado">
+  <v-row style="margin-left:5%">
+    <xlsx-workbook>
       <xlsx-sheet
-        :collection="dato.datos"
-        v-for="dato in datos"
-        :key="dato.nombre"
-        :sheet-name="dato.nombre"
+        :collection="col.datos"
+        :sheet-name="col.nombre"
+        v-for="col in collection"
+        :key="col.nombre"
       />
-
-      <xlsx-download disable-wrapper-click :filename="titulo" v-if="creado">
+      <xlsx-download disable-wrapper-click :filename="titulo">
         <template #default="{download}">
           <v-btn fab @click="download"><v-icon>mdi-export</v-icon></v-btn>
         </template>
@@ -36,17 +35,14 @@ export default {
   props: {
     nombre: {
       type: String,
-      default: "mi excel",
+      default: "",
       required: true
     },
-    datos: {
+    collection: {
       type: Array,
       default: [],
       required: true
     }
-  },
-  data: () => ({
-    creado: false
-  })
+  }
 };
 </script>

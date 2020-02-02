@@ -5,15 +5,14 @@
         <v-row justify="center">
           <v-row justify="center" align="center">
             <Importar
-              class="button"
               :dialog="importar"
               :idcongreso="parseInt(this.$route.params.congreso, 10)"
               @click="agregar()"
             ></Importar>
             <Exportar
-              class="exportar"
               :nombre="congreso"
-              :datos="excel"
+              :collection="excel"
+              v-if="estudiantes.length > 0"
             ></Exportar>
           </v-row>
           <v-spacer></v-spacer>
@@ -44,7 +43,6 @@
           :search="busqueda"
           :page.sync="pagina"
           :loading="load"
-          loading-text="cargando estudiantes"
           :items-per-page="10"
           hide-default-footer
           class="elevation-1"
@@ -70,16 +68,11 @@
 </template>
 <script>
 import Importar_Estudiante from "../components/Importar_Estudiante";
-import Exportar from "../components/Exportar";
+import Exportar from "../components/ExportarPDF";
 export default {
   components: {
     Importar: Importar_Estudiante,
     Exportar
-  },
-  whatch:{
-    estudiantes:(x)=>{
-      this.exportacion();
-    }
   },
   data: () => ({
     load: true,
@@ -111,7 +104,6 @@ export default {
           this.llenar(response.data);
         })
         .catch(e => console.log(e));
-      this.load = false;
     },
     listaExtra() {
       this.$axios
@@ -128,31 +120,99 @@ export default {
         .catch(e => console.log(e));
     },
     llenar(lista) {
-    const listado=Array.from(lista);
+      const listado = Array.from(lista);
       if (listado.length > 0) {
-        this.congreso = lista[0].nombre;
+        this.congreso = listado[0].congreso.nombre;
+        this.titulo(listado);
+        this.resumen(listado);
+        this.completo(listado);
       }
-      listado.forEach(x => {
-        this.estudiantes.push({
-          codigo: x.estudiante.codigo,
-          nombre: x.estudiante.nombre,
-          carrera: x.estudiante.carrera.nombre,
-          regional: x.estudiante.regional.nombre,
-          abono: x.abono
-        });
-      });
+      this.load = false;
     },
-    exportacion() {
-      this.excel.push({
-        nombre: "resumen_estudiante",
-        datos: [
-          { detalle: "esperados", cantidad: 12 },
-          { detalle: "registrados", cantidad: 12 }
-        ]
+    completo(listado) {
+      listado.forEach(x => {
+        const est = x.estudiante;
+        const ac = x.accion;
+        const estudiante = {
+          codigo: est.codigo,
+          nombre: est.nombre,
+          carrera: est.carrera.nombre,
+          regional: est.regional.alias,
+          asistio: ac.registro === 1 ? "si" : "no",
+          break_am: ac.break_am === 1 ? "si" : "no",
+          almuerzo: ac.almuerzo === 1 ? "si" : "no",
+          break_pm: ac.break_pm === 1 ? "si" : "no",
+          abono: x.abono
+        };
+        this.estudiantes.push(estudiante);
       });
       this.excel.push({
         nombre: "estudiantes",
         datos: this.estudiantes
+      });
+    },
+    num(descripcion, listado) {
+      let cantidad = 0;
+      const li = Array.from(listado);
+      switch (descripcion) {
+        case "esperados":
+          cantidad = li.length;
+          break;
+        case "registrados":
+          cantidad = li
+            .filter(x => x.accion.registro === 1)
+            .reduce((x, y) => x + 1, 0);
+          break;
+        case "break_am":
+          cantidad = li
+            .filter(x => x.accion.break_am === 1)
+            .reduce((x, y) => x + 1, 0);
+          break;
+        case "almuerzo":
+          cantidad = li
+            .filter(x => x.accion.almuerzo === 1)
+            .reduce((x, y) => x + 1, 0);
+          break;
+        case "break_pm":
+          cantidad = li
+            .filter(x => x.accion.break_pm === 1)
+            .reduce((x, y) => x + 1, 0);
+          break;
+        default:
+          cantidad = 0;
+          break;
+      }
+      return {
+        descripcion,
+        cantidad
+      };
+    },
+    resumen(listado) {
+      let resumen = [];
+      const descripciones = [
+        "esperados",
+        "registados",
+        "break_am",
+        "almuerzo",
+        "break_pm"
+      ];
+      descripciones.forEach(x => {
+        resumen.push(this.num(x, listado));
+      });
+      this.excel.push({
+        nombre: "resumen",
+        datos: resumen
+      });
+    },
+    titulo(listado) {
+      this.excel.push({
+        nombre: "titulo",
+        datos: [
+          {
+            nombre: listado[0].congreso.nombre,
+            fecha: listado[0].congreso.fecha
+          }
+        ]
       });
     }
   },

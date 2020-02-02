@@ -2,10 +2,10 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
 const routes = [{
-    path: "/inicio/vista",
-    name: "inicio",
-    component: () =>
-        import ("../views/Inicio.vue")
+        path: "/inicio/vista",
+        name: "inicio",
+        component: () =>
+            import ("../views/Inicio.vue")
     },
     {
         path: "/estudiante/vista/:congreso",
