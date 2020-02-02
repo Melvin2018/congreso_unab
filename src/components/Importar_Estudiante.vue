@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="dialogo" persistent max-width="1000">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" fab style="margin-left:7%"><v-icon>mdi-import</v-icon></v-btn>
+      <v-btn v-on="on" fab style="margin-left:7%">
+        <v-icon>mdi-import</v-icon>
+      </v-btn>
     </template>
     <v-col>
       <v-card>
@@ -12,10 +14,12 @@
               height="40px"
               width="40px"
             />
-            <h2 class="display-1 white--text font-weight-light">
-              Importación de estudiantes
-            </h2>
+            <h2 class="display-1 white--text font-weight-light">Importación de estudiantes</h2>
           </v-row>
+          <v-spacer></v-spacer>
+          <v-btn text icon @click="close">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
         <v-card-text>
           <v-col>
@@ -31,10 +35,7 @@
             <xlsx-read :file="file">
               <template #default="{loading}">
                 <v-row v-if="loading" justify="center">
-                  <v-progress-circular
-                    indeterminate
-                    color="primary"
-                  ></v-progress-circular>
+                  <v-progress-circular indeterminate color="primary"></v-progress-circular>
                 </v-row>
                 <xlsx-json v-else>
                   <template #default="{collection}">
@@ -48,21 +49,16 @@
                         class="elevation-1"
                         @page-count="numPagina = $event"
                       >
-                        <template v-slot:item.regional="{ item }">
-                          {{ regional(item.regional) }}
-                        </template>
+                        <template v-slot:item.regional="{ item }">{{ regional(item.regional) }}</template>
                       </v-data-table>
                       <div class="text-center pt-2">
-                        <v-pagination
-                          v-model="pagina"
-                          :length="numPagina"
-                        ></v-pagination>
+                        <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
                       </div>
                       <v-row align="center" justify="center">
                         <v-spacer></v-spacer>
-                        <v-btn dark @click="importar()" :loading="load"
-                          ><v-icon>mdi-location-enter</v-icon>importar</v-btn
-                        >
+                        <v-btn dark @click="importar()" :loading="load">
+                          <v-icon>mdi-location-enter</v-icon>importar
+                        </v-btn>
                       </v-row>
                     </v-col>
                     <v-alert prominent type="error" v-else-if="collection">
@@ -129,6 +125,10 @@ export default {
       await this.$axios.post(URL, lista).catch(e => console.log(e));
       this.load = false;
       this.dialogo = false;
+    },
+    close() {
+      this.dialogo = false;
+  
     },
     async convertir() {
       const lista = [];
