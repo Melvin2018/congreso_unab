@@ -2,38 +2,22 @@
   <v-container>
     <v-card>
       <v-card-title class="blue lighten-1 justify-center">
-        <v-row justify="center">
-          <v-row justify="center" align="center">
-            <Importar
-              :dialog="importar"
-              :idcongreso="parseInt(this.$route.params.congreso, 10)"
-              @click="agregar()"
-            ></Importar>
-            <Exportar
-              :nombre="congreso"
-              :collection="excel"
-              v-if="estudiantes.length > 0"
-            ></Exportar>
+        <v-row justify="center" align="center">
+          <v-row justify="left" align="center">
+            <Importar :dialog="importar" :idcongreso="parse" @click="agregar()"></Importar>
+            <Exportar id="exp" :nombre="congreso" :collection="excel" v-if="estudiantes.length > 0"></Exportar>
           </v-row>
           <v-spacer></v-spacer>
-          <v-row align="center" justify="center">
+          <v-row justify="center">
             <img
               src="https://cdn1.iconfinder.com/data/icons/streaming-services-2/256/TV_Schedule-512.png"
               height="40px"
               width="40px"
             />
-            <h2 class="display-1 white--text font-weight-light">
-              Lista de estudiantes
-            </h2>
+            <h2 class="display-1 white--text font-weight-light">Estudiantes</h2>
           </v-row>
           <v-spacer></v-spacer>
-          <v-text-field
-            v-model="busqueda"
-            label="busqueda"
-            outlined
-            dark
-            append-icon="mdi-magnify"
-          ></v-text-field>
+          <v-text-field v-model="busqueda" label="busqueda" outlined dark append-icon="mdi-magnify"></v-text-field>
         </v-row>
       </v-card-title>
       <v-card-text>
@@ -51,11 +35,11 @@
           <template v-slot:item.opciones="{ item }">
             <v-row align="center" justify="center">
               <v-btn fab @click="editar(item.id)">
-                <v-icon>mdi-sync</v-icon></v-btn
-              >
+                <v-icon>mdi-sync</v-icon>
+              </v-btn>
               <v-btn fab @click="eliminar(item.id)" style="margin-left:2%">
-                <v-icon>mdi-delete</v-icon></v-btn
-              >
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
             </v-row>
           </template>
         </v-data-table>
@@ -73,6 +57,11 @@ export default {
   components: {
     Importar: Importar_Estudiante,
     Exportar
+  },
+  computed: {
+    parse() {
+      return parseInt(this.$route.params.congreso, 10);
+    }
   },
   data: () => ({
     load: true,
@@ -104,6 +93,7 @@ export default {
           this.llenar(response.data);
         })
         .catch(e => console.log(e));
+      this.load = false;
     },
     listaExtra() {
       this.$axios
@@ -127,7 +117,6 @@ export default {
         this.resumen(listado);
         this.completo(listado);
       }
-      this.load = false;
     },
     completo(listado) {
       listado.forEach(x => {
@@ -136,7 +125,7 @@ export default {
         const estudiante = {
           codigo: est.codigo,
           nombre: est.nombre,
-          carrera: est.carrera.nombre,
+          carrera: est.carrera.id,
           regional: est.regional.alias,
           asistio: ac.registro === 1 ? "si" : "no",
           break_am: ac.break_am === 1 ? "si" : "no",
@@ -183,7 +172,7 @@ export default {
           break;
       }
       return {
-        descripcion,
+        resumen: descripcion,
         cantidad
       };
     },
@@ -222,3 +211,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+#exp {
+  margin-left: 2%;
+}
+</style>

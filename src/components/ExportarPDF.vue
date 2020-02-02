@@ -1,6 +1,8 @@
 <template>
   <div>
-    <v-btn fab @click="exportPDF"><v-icon>mdi-export</v-icon></v-btn>
+    <v-btn fab @click="exportPDF">
+      <v-icon>mdi-export</v-icon>
+    </v-btn>
   </div>
 </template>
 <script>
@@ -35,8 +37,16 @@ export default {
               dataKey: x
             });
           }
+          let styles = {};
+          if (lista.nombre === "resumen") {
+            styles = { cellWidth: 20 };
+          } else {
+            styles = { cellWidth: "auto" };
+          }
           doc.autoTable({
-            styles: { fontSize: 7 },
+            styles,
+            headStyles: { fontSize: 5 },
+            bodyStyles: { fontSize: 7 },
             margin: { top: 30 },
             body: lista.datos,
             columns: columns
