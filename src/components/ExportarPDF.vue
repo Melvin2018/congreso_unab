@@ -38,9 +38,11 @@ export default {
           height += 17;
           doc.text("Fecha: " + lista.datos[0].fecha, 10, height);
           isPersonal = lista.datos[0].regional === undefined;
+          height += 8;
           if (!isPersonal) {
-            height += 8;
             doc.text("Regional: " + lista.datos[0].regional, 10, height);
+          } else {
+            doc.text("Tipo: " + lista.datos[0].tipo, 10, height);
           }
         } else {
           let columns = [];
