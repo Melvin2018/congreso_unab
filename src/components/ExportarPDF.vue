@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn fab @click="exportPDF">
+    <v-btn fab @click="exportPDF" icon>
       <v-icon>mdi-export</v-icon>
     </v-btn>
   </div>
@@ -24,23 +24,24 @@ export default {
   methods: {
     exportPDF() {
       let doc = new jsPDF().setProperties({ title: "Reporte" });
+      let isPersonal = false;
+      let height = 0;
       this.collection.forEach(lista => {
         if (lista.nombre === "titulo") {
           doc.setFontSize(18);
-          doc.text(
-            "Reporte del " +
-              lista.datos[0].nombre +
-              " de octavo ciclo, semestre 2, cuarta region al norte.",
-            100,
-            10,
-            {
-              maxWidth: "150",
-              align: "center"
-            }
-          );
+          height += 15;
+          doc.text("Reporte del " + lista.datos[0].nombre, 100, height, {
+            maxWidth: "150",
+            align: "center"
+          });
           doc.setFontSize(12);
-          doc.text("Fecha: " + lista.datos[0].fecha, 10, 27);
-          doc.text("Regional: " + lista.datos[0].regional, 10, 35);
+          height += 17;
+          doc.text("Fecha: " + lista.datos[0].fecha, 10, height);
+          isPersonal = lista.datos[0].regional === undefined;
+          if (!isPersonal) {
+            height += 8;
+            doc.text("Regional: " + lista.datos[0].regional, 10, height);
+          }
         } else {
           let columns = [];
           for (let x of Object.keys(lista.datos[0])) {
@@ -55,18 +56,19 @@ export default {
           } else {
             styles = { cellWidth: "auto" };
           }
+          height += 5;
           doc.autoTable({
             styles,
             headStyles: { fontSize: 5 },
             bodyStyles: { fontSize: 5 },
-            margin: { top: 40 },
+            margin: { top: height },
             body: lista.datos,
             columns: columns
           });
         }
       });
-
-      doc.save(this.nombre + ".pdf");
+      let letra = isPersonal ? "-Personal" : "-Estudiantes";
+      doc.save(this.nombre.concat(letra).concat(".pdf"));
     }
   }
 };

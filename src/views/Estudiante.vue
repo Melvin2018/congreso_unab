@@ -1,45 +1,29 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title class="blue lighten-1 justify-center">
-        <v-row justify="center" align="center">
-          <v-col cols="2">
-            <v-row align="center">
-              <Importar :dialog="importar" :idcongreso="parse" @click="agregar()"></Importar>
-              <Exportar
-                id="exp"
-                :nombre="congreso"
-                :collection="excel"
-                v-if="estudiantes.length > 0"
-              ></Exportar>
-            </v-row>
-          </v-col>
-          <v-col cols="5">
-            <v-row justify="center">
-              <img
-                src="https://cdn1.iconfinder.com/data/icons/streaming-services-2/256/TV_Schedule-512.png"
-                height="40px"
-                width="40px"
-              />
-              <h2 class="display-1 white--text font-weight-light">Estudiantes</h2>
-            </v-row>
-          </v-col>
-          <v-col cols="5">
-            <v-row justify="center" align="center">
-              <v-col cols="5">
-                <v-select v-model="regional" :items="regionales" filled label="regional"></v-select>
-              </v-col>
-              <v-text-field
-                v-model="busqueda"
-                label="busqueda"
-                outlined
-                dark
-                append-icon="mdi-magnify"
-              ></v-text-field>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-card-title>
+      <v-toolbar class="primary" dark>
+        <v-col cols="12" sm="2">
+          <v-row align="center">
+            <Importar :dialog="importar" :idcongreso="parse" @click="agregar()" :cambio="listar()"></Importar>
+            <Exportar id="exp" :nombre="congreso" :collection="excel" v-if="estudiantes.length > 0"></Exportar>
+          </v-row>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-row justify="center">
+            <v-toolbar-title>Estudiante</v-toolbar-title>
+          </v-row>
+        </v-col>
+        <v-col cols="12" sm="6">
+          <v-row align="center" justify="center">
+            <v-col cols="12" sm="5">
+              <v-select v-model="regional" :items="regionales"></v-select>
+            </v-col>
+            <v-col cols="12" sm="7">
+              <v-text-field v-model="busqueda" dark append-icon="mdi-magnify"></v-text-field>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-toolbar>
       <v-card-text>
         <v-data-table
           :headers="columnas"
@@ -68,11 +52,11 @@
   </v-container>
 </template>
 <script>
-import Importar_Estudiante from "../components/Importar_Estudiante";
+import ImportarExcel from "../components/ImportarExcel";
 import Exportar from "../components/ExportarPDF";
 export default {
   components: {
-    Importar: Importar_Estudiante,
+    Importar: ImportarExcel,
     Exportar
   },
   computed: {
@@ -96,10 +80,8 @@ export default {
   },
   data: () => ({
     load: true,
-    lnueva: [],
     regional: "todas",
     regionales: ["todas"],
-    paginacion: {},
     pagina: 1,
     numPagina: 0,
     listaCompleta: [],
@@ -117,7 +99,9 @@ export default {
       { text: "Codigo", align: "center", value: "codigo" },
       { text: "Carrera", align: "center", value: "carrera" },
       { text: "Regional", align: "center", value: "regional" },
-      { text: "Break Am", align: "center", value: "break_am" },
+      { text: "Break_Am", align: "center", value: "break_am" },
+      { text: "Almuerzo", align: "center", value: "almuerzo" },
+      { text: "Break_Pm", align: "center", value: "break_pm" },
       { text: "Abono", align: "center", value: "abono" },
       { text: "Opcion", align: "center", value: "opciones" }
     ]
@@ -129,9 +113,11 @@ export default {
     agregar() {
       this.importar = !this.importar;
     },
-    async listar(congreso) {
+    async listar() {
       const URL =
-        this.$path + "estudiantes_congreso?tipo=1&idCongreso=" + congreso;
+        this.$path +
+        "estudiantes_congreso?tipo=1&idCongreso=" +
+        this.$route.params.congreso;
       await this.$axios
         .get(URL)
         .then(response => {
@@ -141,20 +127,13 @@ export default {
       this.llenar(this.listaCompleta);
       this.load = false;
     },
-    listaExtra() {
+    listaRegional() {
       this.$axios
-        .get(this.$path + "carreras")
+        .get(this.$path + "regionales")
         .then(response => {
-          this.$store.commit("carreras", response.data);
-        })
-        .catch(e => console.log(e));
-      this.$axios
-        .get(this.$path.concat("regionales"))
-        .then(response => {
-          response.data.forEach(x => {
+          Array.from(response.data).forEach(x => {
             this.regionales.push(x.nombre);
           });
-          this.$store.commit("regionales", response.data);
         })
         .catch(e => console.log(e));
     },
@@ -251,8 +230,8 @@ export default {
     }
   },
   mounted() {
-    this.listar(this.$route.params.congreso);
-    this.listaExtra();
+    this.listar();
+    this.listaRegional();
   }
 };
 </script>

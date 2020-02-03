@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialogo" persistent max-width="1000">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" fab style="margin-left:7%">
+      <v-btn v-on="on" icon dark style="margin-left:7%">
         <v-icon>mdi-import</v-icon>
       </v-btn>
     </template>
@@ -124,58 +124,29 @@ export default {
       const lista = this.convertir();
       await this.$axios.post(URL, lista).catch(e => console.log(e));
       this.load = false;
+      this.$emit("cambio", true);
       this.dialogo = false;
     },
     close() {
       this.dialogo = false;
-  
     },
-    async convertir() {
+    convertir() {
       const lista = [];
-      let cambio = this.validarCarrera();
-      if (cambio) {
-        this.refrescar();
-      }
       this.datos.forEach(x => {
         lista.push({
           abono: x.abono,
           estudiante: {
             nombre: x.nombre,
             codigo: x.codigo,
-            carrera: carreras.find(c => c.nombre == x.carrera).id,
-            regional: regionales.find(c => c.alias === x.regional).id
+            carrera: this.carreras.find(c => c.nombre == x.carrera).id,
+            regional: this.regionales.find(
+              c => c.alias.toUpperCase() === x.regional.toUpperCase()
+            ).id
           },
           congreso: this.idcongreso
         });
       });
       return lista;
-    },
-    async refrescar() {
-      const URL = this.$path + "carreras";
-      await this.$axios
-        .get(URL)
-        .then(response => {
-          this.carreras = response.data;
-        })
-        .catch(e => console.log(e));
-    },
-    validarCarrera() {
-      let cambio = false;
-      this.datos.forEach(x => {
-        if (this.carreras.find(c => c.nombre == x.carrera) === undefined) {
-          this.agregar(x.carrera, "carreras");
-          cambio = true;
-        }
-      });
-      return cambio;
-    },
-    async agregar(nombre) {
-      await this.$axios
-        .post(this.$path + "carreras", { nombre: nombre })
-        .then(response => {
-          return response.data;
-        })
-        .catch(e => console.log(e));
     },
     regional(texto) {
       switch (texto) {
@@ -242,11 +213,27 @@ export default {
         }
       }
       return false;
+    },
+    carrera() {
+      this.$axios
+        .get(this.$path + "carreras")
+        .then(response => {
+          this.carreras = response.data;
+        })
+        .catch(e => console.log(e));
+    },
+    regional1() {
+      this.$axios
+        .get(this.$path + "regionales")
+        .then(response => {
+          this.regionales = response.data;
+        })
+        .catch(e => console.log(e));
     }
   },
   mounted() {
-    this.carreras = Array.from(this.$store.state.carreras);
-    this.regionales = Array.from(this.$store.state.regionales);
+    this.carrera();
+    this.regional1();
   }
 };
 </script>

@@ -1,42 +1,22 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title class="blue lighten-1 justify-center">
-        <v-row justify="center">
-          <v-row justify="center" align="center">
-            <Importar
-              class="button"
-              :dialog="importar"
-              :idcongreso="parseInt(this.$route.params.congreso, 10)"
-              @click="agregar()"
-            ></Importar>
-            <Exportar
-              class="exportar"
-              :nombre="titulo"
-              :collection="excel"
-            ></Exportar>
+      <v-toolbar class="primary" dark>
+        <v-col cols="12" sm="2">
+          <v-row align="center">
+            <Importar :dialog="importar" :idcongreso="parse" @click="agregar()" :cambio="listar()"></Importar>
+            <Exportar id="exp" :nombre="congreso" :collection="excel" v-if="personal.length > 0"></Exportar>
           </v-row>
-          <v-spacer></v-spacer>
-          <v-row align="center" justify="center">
-            <img
-              src="https://cdn2.iconfinder.com/data/icons/unigrid-phantom-layout-vol-3/60/021_112_layout_wireframe_grid_search_list-512.png"
-              height="40px"
-              width="40px"
-            />
-            <h2 class="display-1 white--text font-weight-light">
-              Lista de estudiantes
-            </h2>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-row justify="center">
+            <v-toolbar-title>Personal</v-toolbar-title>
           </v-row>
-          <v-spacer></v-spacer>
-          <v-text-field
-            v-model="busqueda"
-            label="busqueda"
-            outlined
-            dark
-            append-icon="mdi-magnify"
-          ></v-text-field>
-        </v-row>
-      </v-card-title>
+        </v-col>
+        <v-col cols="12" sm="6">
+          <v-text-field v-model="busqueda" dark append-icon="mdi-magnify"></v-text-field>
+        </v-col>
+      </v-toolbar>
       <v-card-text>
         <v-data-table
           :headers="columnas"
@@ -44,21 +24,17 @@
           :search="busqueda"
           :page.sync="pagina"
           :loading="load"
-          loading-text="cargando estudiantes"
           :items-per-page="10"
+          loading-text="Cargando..."
+          no-data-text="no hay datos"
           hide-default-footer
           class="elevation-1"
           @page-count="numPagina = $event"
         >
           <template v-slot:item.opciones="{ item }">
-            <v-row align="center" justify="center">
-              <v-btn fab @click="editar(item.id)">
-                <v-icon>mdi-sync</v-icon></v-btn
-              >
-              <v-btn fab @click="eliminar(item.id)" style="margin-left:2%">
-                <v-icon>mdi-delete</v-icon></v-btn
-              >
-            </v-row>
+            <v-btn fab small @click="eliminar(item.id)" style="margin-left:2%">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
           </template>
         </v-data-table>
         <div class="text-center pt-2">
@@ -69,71 +45,158 @@
   </v-container>
 </template>
 <script>
-import Importar_Estudiante from "../components/Importar_Estudiante";
+import ImportarExcel from "../components/ImportarExcel";
 import Exportar from "../components/ExportarPDF";
 export default {
   components: {
-    Importar: Importar_Estudiante,
+    Importar: ImportarExcel,
     Exportar
+  },
+  computed: {
+    parse() {
+      return parseInt(this.$route.params.congreso, 10);
+    }
   },
   data: () => ({
     load: true,
     pagina: 1,
     numPagina: 0,
+    listaCompleta: [],
     personal: [],
-    excel: [],
+    excel: [
+      { nombre: "titulo", datos: [] },
+      { nombre: "resumen", datos: [] },
+      { nombre: "personal", datos: [] }
+    ],
     congreso: "",
     importar: false,
     busqueda: "",
     columnas: [
       { text: "Nombre", align: "center", value: "nombre" },
-      { text: "Funcion", align: "center", value: "funcion" },
+      { text: "Codigo", align: "center", value: "email" },
+      { text: "Break Am", align: "center", value: "break_am" },
+      { text: "Almuerzo", align: "center", value: "almuerzo" },
+      { text: "Break Pm", align: "center", value: "break_pm" },
       { text: "Opcion", align: "center", value: "opciones" }
     ]
   }),
   methods: {
+    imprimir() {
+      console.log(this.personal[0].nombre);
+    },
     agregar() {
       this.importar = !this.importar;
     },
-    async listar(congreso) {
-      const URL = this.$path + "personal_congreso?idCongreso=" + congreso;
+    async listar() {
+      const URL =
+        this.$path +
+        "personal_congreso?tipo=1&idCongreso=" +
+        this.$route.params.congreso;
       await this.$axios
         .get(URL)
         .then(response => {
-          this.llenar(response.data);
+          this.listaCompleta = response.data;
         })
         .catch(e => console.log(e));
+      this.llenar(this.listaCompleta);
       this.load = false;
     },
+
     llenar(lista) {
-      if (lista.length > 0) {
-        this.congreso = lista[0].nombre;
+      const listado = Array.from(lista);
+      if (listado.length > 0) {
+        this.congreso = listado[0].congreso.nombre;
+        this.titulo(listado);
+        this.resumen(listado);
+        this.completo(listado);
       }
-      Array.from(lista).forEach(x => {
-        this.personal.push({
-          nombre: x.personal.nombre,
-          abono: x.personal.funcion
-        });
-      });
     },
-    exportacion() {
-      this.excel.push({
-        nombre: "resumen_personal",
-        datos: [
-          { detalle: "esperados", cantidad: 12 },
-          { detalle: "registrados", cantidad: 12 }
-        ]
+    completo(listado) {
+      this.personal = [];
+      let num = 0;
+      listado.forEach(x => {
+        num++;
+        let est = x.personal;
+        let ac = x.accion;
+        const obj = {
+          N: num,
+          email: est.email,
+          nombre: est.nombre,
+          asistio: ac.registro === 1 ? "si" : "no",
+          break_am: ac.break_am === 1 ? "si" : "no",
+          almuerzo: ac.almuerzo === 1 ? "si" : "no",
+          break_pm: ac.break_pm === 1 ? "si" : "no"
+        };
+        this.personal.push(obj);
       });
-      this.excel.push({
-        nombre: "personal",
-        datos: this.personal
+      this.excel.find(x => x.nombre === "personal").datos = this.personal;
+    },
+    num(descripcion, listado) {
+      let cantidad = 0;
+      const li = Array.from(listado);
+      switch (descripcion) {
+        case "esperados":
+          cantidad = li.length;
+          break;
+        case "registrados":
+          cantidad = li
+            .filter(x => x.accion.registro === 1)
+            .reduce((x, y) => x + 1, 0);
+          break;
+        case "break_am":
+          cantidad = li
+            .filter(x => x.accion.break_am === 1)
+            .reduce((x, y) => x + 1, 0);
+          break;
+        case "almuerzo":
+          cantidad = li
+            .filter(x => x.accion.almuerzo === 1)
+            .reduce((x, y) => x + 1, 0);
+          break;
+        case "break_pm":
+          cantidad = li
+            .filter(x => x.accion.break_pm === 1)
+            .reduce((x, y) => x + 1, 0);
+          break;
+        default:
+          cantidad = 0;
+          break;
+      }
+      return {
+        resumen: descripcion,
+        cantidad
+      };
+    },
+    resumen(listado) {
+      let resumen = [];
+      const descripciones = [
+        "esperados",
+        "registados",
+        "break_am",
+        "almuerzo",
+        "break_pm"
+      ];
+      descripciones.forEach(x => {
+        resumen.push(this.num(x, listado));
       });
+      this.excel.find(x => x.nombre === "resumen").datos = resumen;
+    },
+    titulo(listado) {
+      this.excel.find(x => x.nombre === "titulo").datos = [
+        {
+          nombre: listado[0].congreso.nombre,
+          fecha: listado[0].congreso.fecha
+        }
+      ];
     }
   },
   mounted() {
-    this.listar(this.$route.params.congreso);
-    this.exportacion();
-    this.listaExtra();
+    this.listar();
   }
 };
 </script>
+<style scoped>
+#exp {
+  margin-left: 2%;
+}
+</style>
