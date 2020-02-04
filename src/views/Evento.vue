@@ -2,11 +2,11 @@
   <v-container>
     <v-layout row wrap>
       <v-flex>
-    <v-card  >
-      <v-card-title class="light-blue accent-3 justify-center">
+    <v-card >
+      <v-card-title id="exp" class="light-blue accent-3 justify-center">
         <v-row justify="center">
           <v-col>
-            <v-btn fab x-large dark color="success" @click="onClick"
+            <v-btn class="mx-2" fab dark color="success" @click="onClick"
               ><v-icon dark>mdi-domain</v-icon></v-btn>
           </v-col>
           <v-spacer></v-spacer>
@@ -191,6 +191,11 @@ export default {
 </script>
 <style>
 .width {
-  width: 80%;
+  width: 100%;
+}
+</style>
+<style scoped>
+#exp {
+  margin: 1%;
 }
 </style>
