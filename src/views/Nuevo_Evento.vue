@@ -5,13 +5,16 @@
         <v-card-title class="blue lighten-1 justify-center">
           <v-row align="center" justify="center">
             <img
-              src="https://cdn4.iconfinder.com/data/icons/ikooni-outline-project-planning/128/planning-15-512.png"
+              src="https://cdn3.iconfinder.com/data/icons/academy-5/64/time_and_date-schedule-administration-date-calendars-organization-calendar-interface-time-512.png"
               height="40px"
               width="40px"
             />
-            <h2 class="display-1 white--text font-weight-light">
-              Nuevo congreso
-            </h2>
+            <v-card-title class="headline white--text font-weight-light">
+              <h3>
+              Nuevo Congreso
+            </h3>
+            </v-card-title>
+            
           </v-row>
         </v-card-title>
         <v-card-text>

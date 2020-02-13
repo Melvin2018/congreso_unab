@@ -10,7 +10,7 @@
         </v-col>
         <v-col cols="12" sm="4">
           <v-row justify="center">
-            <v-toolbar-title>Personal</v-toolbar-title>
+            <v-toolbar-title><h3>Personal</h3></v-toolbar-title>
           </v-row>
         </v-col>
         <v-col cols="12" sm="6">

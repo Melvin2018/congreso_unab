@@ -8,6 +8,18 @@ const routes = [{
             import ("../views/Inicio.vue")
     },
     {
+        path: "/login/vista",
+        name: "login",
+        component: () =>
+            import ("../views/Login.vue")
+    },
+    {
+        path: "/prueba/vista",
+        name: "prueba",
+        component: () =>
+            import ("../views/Prueba.vue")
+    },
+    {
         path: "/estudiante/vista/:congreso",
         name: "estudiante",
         component: () =>
