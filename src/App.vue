@@ -53,6 +53,8 @@
         </v-slide-y-transition>
       </v-container>
     </v-content>
+
+    
     
     <template>
   <v-footer 
@@ -70,6 +72,8 @@
   </v-footer>
 </template>
   </v-app>
+
+  
 </template>
 
 <script>
