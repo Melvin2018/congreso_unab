@@ -52,7 +52,7 @@
   </v-container>
 </template>
 <script>
-import ImportarExcel from "../components/ImportarExcel1";
+import ImportarExcel from "../components/ImportarPersonal";
 import Exportar from "../components/ExportarPDF";
 export default {
   components: {

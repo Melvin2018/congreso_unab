@@ -1,36 +1,41 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import NotFound from '@/views/NotFound.vue'
+import Home from '@/views/Inicio.vue'
+import Estudiante from '@/views/Estudiante.vue'
+import Personal from '@/views/Personal.vue'
+import Evento from '@/views/Evento.vue'
 Vue.use(VueRouter);
 const routes = [{
-        path: "/inicio/vista",
-        name: "inicio",
-        component: () =>
-            import ("../views/Inicio.vue")
-    },
-    {
-        path: "/estudiante/vista/:congreso",
-        name: "estudiante",
-        component: () =>
-            import ("../views/Estudiante.vue")
-    },
-    {
-        path: "/personal/vista/:congreso",
-        name: "personal",
-        component: () =>
-            import ("../views/Personal.vue")
-    },
-    {
-        path: "/evento/vista",
-        name: "evento",
-        component: () =>
-            import ("../views/Evento.vue")
-    },
-    {
-        path: "/evento/nuevo",
-        name: "nuevoEvento",
-        component: () =>
-            import ("../views/Nuevo_Evento.vue")
-    }
+    path: "/",
+    name: "inicio",
+    component: Home
+},
+{
+    path: "/estudiante/vista/:congreso",
+    name: "estudiante",
+    component: Estudiante
+},
+{
+    path: "/personal/vista/:congreso",
+    name: "personal",
+    component: Personal
+},
+{
+    path: "/congreso/vista",
+    name: "congresos",
+    component: Evento
+},
+
+{
+    path: "/error/:tipo",
+    name:'error',
+    component: NotFound
+},
+{
+    path: "*",
+    component: NotFound
+}
 ];
 const router = new VueRouter({
     mode: "history",

@@ -1,58 +1,89 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-toolbar class="primary" dark>
-        <v-col cols="12" sm="2">
-          <v-row align="center">
-            <Importar :dialog="importar" :idcongreso="parse" @click="agregar()" :cambio="listar()"></Importar>
-            <Exportar id="exp" :nombre="congreso" :collection="excel" v-if="estudiantes.length > 0"></Exportar>
-          </v-row>
-        </v-col>
-        <v-col cols="12" sm="4">
-          <v-row justify="center">
-            <v-toolbar-title>Estudiante</v-toolbar-title>
-          </v-row>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <v-row align="center" justify="center">
-            <v-col cols="12" sm="5">
-              <v-select v-model="regional" :items="regionales"></v-select>
-            </v-col>
-            <v-col cols="12" sm="7">
-              <v-text-field v-model="busqueda" dark append-icon="mdi-magnify"></v-text-field>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-toolbar>
-      <v-card-text>
-        <v-data-table
-          :headers="columnas"
-          :items="estudiantes"
-          :search="busqueda"
-          :page.sync="pagina"
-          :loading="load"
-          :items-per-page="10"
-          loading-text="Cargando..."
-          no-data-text="no hay datos"
-          hide-default-footer
-          class="elevation-1"
-          @page-count="numPagina = $event"
-        >
-          <template v-slot:item.opciones="{ item }">
-            <v-btn fab small @click="eliminar(item.id)" style="margin-left:2%">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </template>
-        </v-data-table>
-        <div class="text-center pt-2">
-          <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
-        </div>
-      </v-card-text>
-    </v-card>
+  <v-container fluid>
+    <v-layout row justify-center align-center>
+      <v-flex xl11 lg11 md11 sm11 xs11>
+        <v-card>
+          <v-toolbar dark height="75">
+            <v-layout justify-center align-center>
+              <v-flex xl3 lg3 md3 sm3 xs3>
+                <v-layout align-center justify-start>
+                  <v-flex xl4 lg4 md4 sm4 xs4>
+                    <Importar
+                      :dialog="importar"
+                      :idcongreso="parse"
+                      @click="agregar()"
+                      :cambio="listar()"
+                    ></Importar>
+                  </v-flex>
+                  <v-flex xl4 lg4 md4 sm4 xs4 v-if="estudiantes.length > 0">
+                    <Exportar id="exp" :nombre="congreso" :collection="excel"></Exportar>
+                  </v-flex>
+                  <v-flex xl4 lg4 md4 sm4 xs4>
+                    <v-btn fab small>
+                      <v-icon>mdi-account-plus</v-icon>
+                    </v-btn>
+                  </v-flex>
+                  <v-flex xl4 lg4 md4 sm4 xs4>
+                    <v-btn fab small>
+                      <v-icon>mdi-email</v-icon>
+                    </v-btn>
+                  </v-flex>
+                </v-layout>
+              </v-flex>
+              <v-flex xl4 lg4 md4 sm4 xs4>
+                <v-layout justify-center align-center>
+                  <v-toolbar-title>Estudiante</v-toolbar-title>
+                </v-layout>
+              </v-flex>
+              <v-flex xl5 lg5 md5 sm5 xs5>
+                <v-layout justify-center>
+                  <v-flex xl5 lg5 md5 sm5 xs5>
+                    <v-select v-model="regional" label="regional" :items="regionales"></v-select>
+                  </v-flex>
+                  <v-spacer></v-spacer>
+                  <v-flex xl6 lg6 md6 sm6 xs6>
+                    <v-text-field
+                      v-model="busqueda"
+                      label="busqueda"
+                      dark
+                      append-icon="mdi-magnify"
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+              </v-flex>
+            </v-layout>
+          </v-toolbar>
+          <v-card-text>
+            <v-data-table
+              :headers="columnas"
+              :items="estudiantes"
+              :search="busqueda"
+              :page.sync="pagina"
+              :loading="load"
+              :items-per-page="10"
+              loading-text="Cargando..."
+              no-data-text="no hay datos"
+              hide-default-footer
+              class="elevation-1"
+              @page-count="numPagina = $event"
+            >
+              <template v-slot:item.opciones="{ item }">
+                <v-btn fab small @click="eliminar(item.id)" style="margin-left:2%">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </template>
+            </v-data-table>
+            <div class="text-center pt-2">
+              <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 <script>
-import ImportarExcel from "../components/ImportarExcel";
+import ImportarExcel from "../components/ImportarEstudiante";
 import Exportar from "../components/ExportarPDF";
 export default {
   components: {
@@ -107,9 +138,6 @@ export default {
     ]
   }),
   methods: {
-    imprimir() {
-      console.log(this.estudiantes[0].nombre);
-    },
     agregar() {
       this.importar = !this.importar;
     },
@@ -123,7 +151,14 @@ export default {
         .then(response => {
           this.listaCompleta = response.data;
         })
-        .catch(e => console.log(e));
+        .catch(e =>
+          this.$router.push({
+            name: "error",
+            params: {
+              tipo: false
+            }
+          })
+        );
       this.llenar(this.listaCompleta);
       this.load = false;
     },

@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialogo" persistent max-width="1000">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" icon dark style="margin-left:7%">
+      <v-btn v-on="on" icon dark small style="margin-left:7%">
         <v-icon>mdi-import</v-icon>
       </v-btn>
     </template>

@@ -8,7 +8,7 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import vuetify from "@/plugins/vuetify";
 Vue.prototype.$axios = axios;
-Vue.prototype.$path = "http://206.189.206.157:8000/api/";
+Vue.prototype.$path = "http://192.168.43.43:8000/api/v1/";
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
 Vue.use(vuetify);
