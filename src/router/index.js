@@ -9,50 +9,33 @@ Vue.use(VueRouter);
 const routes = [{
         path: "/inicio/vista",
         name: "inicio",
-        component: () =>
-            import ("../views/Inicio.vue")
+        component: Home
     },
-    {
-        path: "/login/vista",
-        name: "login",
-        component: () =>
-            import ("../views/Login.vue")
-    },
-    {
-        path: "/prueba/vista",
-        name: "prueba",
-        component: () =>
-            import ("../views/Prueba.vue")
-    },
+
     {
         path: "/estudiante/vista/:congreso",
         name: "estudiante",
-        component: () =>
-            import ("../views/Estudiante.vue")
+        component:Estudiante
     },
     {
         path: "/personal/vista/:congreso",
         name: "personal",
-        component: () =>
-            import ("../views/Personal.vue")
+        component: Personal
     },
     {
         path: "/evento/vista",
         name: "evento",
-        component: () =>
-            import ("../views/Evento.vue")
+        component: Evento
     },
     {
-        path: "/evento/nuevo",
-        name: "nuevoEvento",
-        component: () =>
-            import ("../views/Nuevo_Evento.vue")
+        path: "*",
+        component:NotFound
     },
+    ,
     {
-        path: "/estadisticas/vista",
-        name: "estadisticas",
-        component: () =>
-            import ("../views/Estadisticas.vue")
+        path: "/error/:tipo",
+        name: "error",
+        component: NotFound
     }
 ];
 const router = new VueRouter({

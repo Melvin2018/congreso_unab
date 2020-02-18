@@ -9,20 +9,9 @@
               height="40px"
               width="40px"
             />
-<<<<<<< HEAD:src/components/Nuevo_Evento.vue
             <h2 class="display-1 white--text font-weight-light">Nuevo congreso</h2>
           </v-layout>
         </v-toolbar>
-=======
-            <v-card-title class="headline white--text font-weight-light">
-              <h3>
-              Nuevo Congreso
-            </h3>
-            </v-card-title>
-            
-          </v-row>
-        </v-card-title>
->>>>>>> 9521af83ae6e1dedc40b2d66bf5f0d5c9edfddb8:src/views/Nuevo_Evento.vue
         <v-card-text>
           <v-layout row justify-center>
             <v-flex xl8 lg8 md8 sm8 xs8>
@@ -59,15 +48,6 @@
               </v-menu>
             </v-flex>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-file-input
-                v-model="file"
-                label="foto"
-                accept="image/*"
-                prepend-icon="mdi-file"
-                counter
-              />
-            </v-flex>
-            <v-flex xl8 lg8 md8 sm8 xs8>
               <v-text-field
                 v-model.number="evento.precio"
                 type="number"
@@ -79,7 +59,25 @@
               ></v-text-field>
             </v-flex>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-select v-model="evento.lugar" label="Lugar" :items="lugares">
+              <v-select
+                v-model="evento.lugar"
+                label="Lugar"
+                item-value="id"
+                item-text="nombre"
+                :items="lugares"
+              ></v-select>
+            </v-flex>
+            <v-flex xl8 lg8 md8 sm8 xs8>
+              <v-select
+                v-model="categoria"
+                label="Categoria"
+                item-value="id"
+                item-text="nombre"
+                :items="categorias"
+              ></v-select>
+            </v-flex>
+            <v-flex xl8 lg8 md8 sm8 xs8>
+              <v-select v-model="evento.lugar" label="Categoria" :items="lugares">
                 <template slot="selection" slot-scope="data">
                   <span>{{data.item.nombre}}</span>
                 </template>
@@ -108,6 +106,9 @@ export default {
     }
   },
   data: () => ({
+    categoria: {},
+    categorias: [],
+    fotos: [],
     valido: true,
     menu: false,
     file: null,
@@ -117,7 +118,7 @@ export default {
       fecha: new Date().toISOString().substr(0, 10),
       precio: 65,
       fondo: "",
-      lugar: {}
+      lugar: 1
     },
     nombreRol: [v => !!v || "Nombre obligatorio"],
     precioRol: [
@@ -144,21 +145,38 @@ export default {
         .then(response => {
           this.lugares = response.data;
         })
-        .catch(e => console.log(e));
+        .catch(e =>
+          this.$router.push({
+            name: "error",
+            params: {
+              tipo: false
+            }
+          })
+        );
       const lu = this.lugares;
-      //   this.evento.lugar = lu ? lu[0] : {};
-      // .catch(e =>
-      //   this.$router.push({
-      //     name: "error",
-      //     params: {
-      //       tipo: false
-      //     }
-      //   })
-      // );
+      this.evento.lugar = lu ? lu[0] : {};
+    },
+    async listarCategorias() {
+      await this.$axios
+        .get(this.$path.concat("categorias"))
+        .then(response => {
+          this.categorias = response.data;
+        })
+        .catch(e =>
+          this.$router.push({
+            name: "error",
+            params: {
+              tipo: false
+            }
+          })
+        );
+      const lu = this.categorias;
+      this.categoria = lu ? lu[0] : {};
     }
   },
   created() {
     this.listarLugares();
+    this.listarCategorias();
   }
 };
 </script>
