@@ -1,7 +1,4 @@
 <template>
-<<<<<<< HEAD
-  
-=======
   <v-container       class="flex-small-windows">
     <v-layout row wrap>
       <v-flex>
@@ -145,7 +142,6 @@
       </v-flex>
     </v-layout>
   </v-container>
->>>>>>> 9521af83ae6e1dedc40b2d66bf5f0d5c9edfddb8
 </template>
 <script>
 import Nuevo from "@/components/Nuevo_Evento.vue";
