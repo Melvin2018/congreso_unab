@@ -4,7 +4,7 @@
       <v-toolbar class="primary" dark>
         <v-col cols="12" sm="2">
           <v-row align="center">
-            <Importar :dialog="importar" :idcongreso="parse" @click="agregar()"></Importar>
+            <Importar :dialog="importar" :idcongreso="parse" @click="agregar()" :cambio="listar()"></Importar>
             <Exportar id="exp" :nombre="congreso" :collection="excel" v-if="personal.length > 0"></Exportar>
           </v-row>
         </v-col>
@@ -52,7 +52,7 @@
   </v-container>
 </template>
 <script>
-import ImportarExcel from "../components/ImportarPersonal";
+import ImportarExcel from "../components/ImportarExcel1";
 import Exportar from "../components/ExportarPDF";
 export default {
   components: {
@@ -68,13 +68,13 @@ export default {
     tipo: function(x) {
       let listaCompleta = Array.from(this.listaCompleta);
       let lista =
-        x === "todos"
+        x === "todas"
           ? listaCompleta
           : listaCompleta.filter(r => r.personal.tipo.nombre == x);
       this.personal = [];
-      this.resumen(lista);
-      this.completo(lista);
-      this.excel.find(x => x.nombre === "titulo").datos[0].tipo = this.tipo;
+      // this.resumen(lista);
+      // this.completo(lista);
+      // this.excel.find(x => x.nombre === "titulo").datos[0].tipo = this.tipo;
     }
   },
   data: () => ({
@@ -104,15 +104,18 @@ export default {
     ]
   }),
   methods: {
+    imprimir() {
+      console.log(this.personal[0].nombre);
+    },
     agregar() {
       this.importar = !this.importar;
     },
-    async listar() {
+    listar() {
       const URL =
         this.$path +
         "personal_congreso?tipo=1&idCongreso=" +
         this.$route.params.congreso;
-      await this.$axios
+      this.$axios
         .get(URL)
         .then(response => {
           this.listaCompleta = response.data;
@@ -221,8 +224,8 @@ export default {
     }
   },
   mounted() {
-    this.listar();
-    this.listaTipo();
+    // this.listar();
+     this.listaTipo();
   }
 };
 </script>
