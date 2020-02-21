@@ -6,10 +6,10 @@
           <v-toolbar-title dense class="light-blue darken-2 justify-center">
             <v-row justify="center">
               <v-col>
-                <v-btn class="mx-2" fab dark color="success" @click="modal=!modal">
+                <v-btn class="mx-2" fab dark color="success" @click="modal()">
                   <v-icon size="x-large" dark>mdi-plus</v-icon>
                 </v-btn>
-                <nuevo :modal="modal" />
+                <nuevo @evento="nuevoCongreso" />
               </v-col>
               <v-spacer></v-spacer>
               <v-row align="center" justify="center">
@@ -136,6 +136,7 @@
 </template>
 <script>
 import Nuevo from "@/components/Nuevo_Evento.vue";
+import Swal from 'sweetalert2'
 export default {
   components: {
     Nuevo
@@ -152,18 +153,35 @@ export default {
     load: true,
     tabs: null,
     pagina: 1,
-    modal: false,
     numPagina: 0,
     eventos: [],
     busqueda: ""
   }),
   methods: {
+    nuevoCongreso(e) {
+      this.eventos.push(e);
+    },
+    modal() {
+      this.$store.state.modalEvento = true;
+    },
     async eliminar(congreso) {
       const URL = this.$path + "congresos";
       await this.$axios
-        .delete(this.$path.concat("congresos?id=").concat(congreso.id))
+        .delete(this.$path.concat("congresos/").concat(congreso.id))
+        .then(x => {
+          if (x.data.respuesta) {
+            this.eventos.splice(this.eventos.indexOf(congreso), 1);
+          } else {
+            Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: "no es posible eliminar este congreso",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        })
         .catch(e => console.log(e));
-      this.eventos.splice(this.eventos.indexOf(congreso), 1);
     },
     async listarEventos() {
       this.load = true;

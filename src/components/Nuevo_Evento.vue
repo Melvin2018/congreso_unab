@@ -3,14 +3,19 @@
     <v-form ref="form" v-model="valido">
       <v-card>
         <v-toolbar dark height="50">
-          <v-layout justify-center row>
-            <img
-              src="https://cdn3.iconfinder.com/data/icons/academy-5/64/time_and_date-schedule-administration-date-calendars-organization-calendar-interface-time-512.png"
-              height="40px"
-              width="40px"
-            />
-            <h2 class="display-1 white--text font-weight-light">Nuevo congreso</h2>
-          </v-layout>
+          <v-col cols="12" lg="11">
+            <v-layout justify-center row>
+              <img
+                src="https://cdn3.iconfinder.com/data/icons/academy-5/64/time_and_date-schedule-administration-date-calendars-organization-calendar-interface-time-512.png"
+                height="40px"
+                width="40px"
+              />
+              <h2 class="display-1 white--text font-weight-light">Nuevo congreso</h2>
+            </v-layout>
+          </v-col>
+          <v-btn text icon @click="close">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-toolbar>
         <v-card-text>
           <v-layout row justify-center>
@@ -71,18 +76,31 @@
               <v-select
                 v-model="categoria"
                 label="Categoria"
-                item-value="id"
                 item-text="nombre"
                 :items="categorias"
               ></v-select>
             </v-flex>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-select v-model="evento.lugar" label="Categoria" :items="lugares">
-                <template slot="selection" slot-scope="data">
-                  <span>{{data.item.nombre}}</span>
-                </template>
-                <template slot="item" slot-scope="data">{{data.item.nombre}}</template>
-              </v-select>
+              <v-radio-group v-model="evento.fondo" label="Fondo">
+                <v-row justify="center">
+                  <v-col v-for="fondo in fondosCategoria" :key="fondo.id" cols="4">
+                    <v-radio :value="fondo.url"></v-radio>
+                    <v-img
+                      :src="fondo.url"
+                      lazy-src="https://lh6.googleusercontent.com/-k2rwhrJfhT4/U0LXvlh92tI/AAAAAAAAENE/pg1CcMxOhiY/s480/universidad-andres-bello-chalatenango.jpg"
+                      aspect-ratio="1"
+                      class="grey lighten-2"
+                      height="100"
+                    >
+                      <template v-slot:placeholder>
+                        <v-row class="fill-height ma-0" align="center" justify="center">
+                          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                        </v-row>
+                      </template>
+                    </v-img>
+                  </v-col>
+                </v-row>
+              </v-radio-group>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -98,27 +116,32 @@
 </template>
 <script>
 export default {
-  props: {
-    modal: {
-      type: Boolean,
-      required: true,
-      default: false
+  computed: {
+    fondosCategoria() {
+      const lista = this.fondos.filter(
+        y => this.categoria === y.categoria.nombre
+      );
+      this.evento.fondo = lista.length > 0 ? lista[0].url : "";
+      return lista;
+    },
+    modal() {
+      return this.$store.state.modalEvento;
     }
   },
   data: () => ({
-    categoria: {},
+    categoria: "",
     categorias: [],
-    fotos: [],
+    fondos: [],
     valido: true,
     menu: false,
-    file: null,
     lugares: [],
     evento: {
       nombre: "",
       fecha: new Date().toISOString().substr(0, 10),
       precio: 65,
+      estado: 1,
       fondo: "",
-      lugar: 1
+      lugar: 0
     },
     nombreRol: [v => !!v || "Nombre obligatorio"],
     precioRol: [
@@ -128,11 +151,15 @@ export default {
     ]
   }),
   methods: {
+    close() {
+      this.$store.state.modalEvento = false;
+    },
     async onClick() {
       if (this.$refs.form.validate()) {
         const URL = this.$path + "congresos";
         await this.$axios.post(URL, this.evento).catch(e => console.log(e));
-        this.$router.go();
+        this.$emit("evento", this.evento);
+        this.close();
       }
     },
     async reset() {
@@ -154,7 +181,7 @@ export default {
           })
         );
       const lu = this.lugares;
-      this.evento.lugar = lu ? lu[0] : {};
+      this.evento.lugar = lu ? lu[0].id : "";
     },
     async listarCategorias() {
       await this.$axios
@@ -171,12 +198,28 @@ export default {
           })
         );
       const lu = this.categorias;
-      this.categoria = lu ? lu[0] : {};
+      this.categoria = lu ? lu[0].nombre : "";
+    },
+    async listarFondos() {
+      await this.$axios
+        .get(this.$path.concat("fondos"))
+        .then(response => {
+          this.fondos = response.data;
+        })
+        .catch(e =>
+          this.$router.push({
+            name: "error",
+            params: {
+              tipo: false
+            }
+          })
+        );
     }
   },
   created() {
     this.listarLugares();
     this.listarCategorias();
+    this.listarFondos();
   }
 };
 </script>

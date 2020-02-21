@@ -101,7 +101,7 @@ export default {
           "https://cdn0.iconfinder.com/data/icons/miscellaneous-21-line/128/administration_regime_people_admin-512.png"
       },
       {
-        ruta: "/estadistica",
+        ruta: "/estadisticas",
         titulo: "Estadisticas",
         img:
           "https://cdn2.iconfinder.com/data/icons/essential-web-1-1/50/lesson-presentation-keynote-report-statistics-512.png"
