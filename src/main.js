@@ -14,7 +14,6 @@ const options = {
   confirmButtonColor: '#41b882',
   cancelButtonColor: '#ff7674',
 };
-//Vue.prototype.$path = "http://192.168.43.43:8000/api/v1/";
 Vue.prototype.$path = "http://localhost:8000/api/v1/";
 Vue.use(VueAxios, axios);
 Vue.use(VueSweetalert2, options);

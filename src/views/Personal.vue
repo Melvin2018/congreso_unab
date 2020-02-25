@@ -5,7 +5,7 @@
         <v-col cols="12" sm="2">
           <v-row align="center">
             <Importar :dialog="importar" :idcongreso="parse" @click="agregar()"></Importar>
-            <Exportar id="exp" :nombre="congreso" :collection="excel" v-if="personal.length > 0"></Exportar>
+            <Exportar id="exp" :nombre="congreso.nombre" :collection="excel" v-if="personal.length > 0"></Exportar>
           </v-row>
         </v-col>
         <v-col cols="12" sm="4">
@@ -66,22 +66,22 @@ export default {
   },
   watch: {
     tipo: function(x) {
-      let listaCompleta = Array.from(this.listaCompleta);
       let lista =
         x === "todos"
-          ? listaCompleta
-          : listaCompleta.filter(r => r.personal.tipo.nombre == x);
-      this.personal = [];
-      this.resumen(lista);
+          ? this.listaCompleta
+          : this.listaCompleta.filter(r => r.personal.tipo.nombre == x);
+
+      this.excel.find(
+        x => x.nombre === "titulo"
+      ).datos[0].tipo = this.tipo;
       this.completo(lista);
-      this.excel.find(x => x.nombre === "titulo").datos[0].tipo = this.tipo;
     }
   },
   data: () => ({
     load: true,
     tipo: "todos",
-    pagina: 1,
     tipos: ["todos"],
+    pagina: 1,
     numPagina: 0,
     listaCompleta: [],
     personal: [],
@@ -90,10 +90,10 @@ export default {
       { nombre: "resumen", datos: [] },
       { nombre: "personal", datos: [] }
     ],
-    congreso: "",
+    congreso: {},
     importar: false,
     busqueda: "",
-    columnas: [
+   columnas: [
       { text: "Nombre", align: "center", value: "nombre" },
       { text: "Codigo", align: "center", value: "email" },
       { text: "Tipo", align: "center", value: "tipo" },
@@ -104,21 +104,24 @@ export default {
     ]
   }),
   methods: {
-    agregar() {
-      this.importar = !this.importar;
-    },
     async listar() {
-      const URL =
-        this.$path +
-        "personal_congreso?tipo=1&idCongreso=" +
-        this.$route.params.congreso;
+      const URL = this.$path + "personal/" + this.$route.params.congreso;
       await this.$axios
         .get(URL)
         .then(response => {
-          this.listaCompleta = response.data;
+          this.listaCompleta = response.data.personal;
+          this.congreso = response.data.congreso;
         })
-        .catch(e => console.log(e));
-      this.llenar(this.listaCompleta);
+        .catch(e =>
+          this.$router.push({
+            name: "error",
+            params: {
+              tipo: false
+            }
+          })
+        );
+      this.completo(this.listaCompleta);
+      this.titulo();
       this.load = false;
     },
     listaTipo() {
@@ -131,18 +134,10 @@ export default {
         })
         .catch(e => console.log(e));
     },
-    llenar(lista) {
-      const listado = Array.from(lista);
-      if (listado.length > 0) {
-        this.congreso = listado[0].congreso.nombre;
-        this.titulo(listado);
-        this.resumen(listado);
-        this.completo(listado);
-      }
-    },
-    completo(listado) {
+    completo(lista) {
+      this.personal = [];
       let num = 0;
-      listado.forEach(x => {
+      lista.forEach(x => {
         num++;
         let est = x.personal;
         let ac = x.accion;
@@ -159,10 +154,11 @@ export default {
         this.personal.push(obj);
       });
       this.excel.find(x => x.nombre === "personal").datos = this.personal;
+      this.resumen(lista);
     },
-    num(descripcion, listado) {
+    num(descripcion, lista) {
+      const li = Array.from(lista);
       let cantidad = 0;
-      const li = Array.from(listado);
       switch (descripcion) {
         case "esperados":
           cantidad = li.length;
@@ -196,7 +192,7 @@ export default {
         cantidad
       };
     },
-    resumen(listado) {
+    resumen(lista) {
       let resumen = [];
       const descripciones = [
         "esperados",
@@ -206,15 +202,15 @@ export default {
         "break_pm"
       ];
       descripciones.forEach(x => {
-        resumen.push(this.num(x, listado));
+        resumen.push(this.num(x, lista));
       });
       this.excel.find(x => x.nombre === "resumen").datos = resumen;
     },
-    titulo(listado) {
+    titulo() {
       this.excel.find(x => x.nombre === "titulo").datos = [
         {
-          nombre: listado[0].congreso.nombre,
-          fecha: listado[0].congreso.fecha,
+          nombre: this.congreso.nombre,
+          fecha: this.congreso.fecha,
           tipo: this.tipo
         }
       ];

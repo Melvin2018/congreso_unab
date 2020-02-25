@@ -3,54 +3,69 @@
     <v-form ref="form" v-model="valido">
       <v-card>
         <v-toolbar dark height="50">
-          <v-layout justify-center row>
-            <img
-              src="https://cdn4.iconfinder.com/data/icons/ikooni-outline-project-planning/128/planning-15-512.png"
-              height="40px"
-              width="40px"
-            />
-            <h2 class="display-1 white--text font-weight-light">Nuevo estudiante</h2>
-          </v-layout>
+          <v-col cols="12" lg="11">
+            <v-layout justify-center row>
+              <img
+                src="https://cdn3.iconfinder.com/data/icons/academy-5/64/time_and_date-schedule-administration-date-calendars-organization-calendar-interface-time-512.png"
+                height="40px"
+                width="40px"
+              />
+              <h2 class="display-1 white--text font-weight-light">Nuevo Estudiante</h2>
+            </v-layout>
+          </v-col>
+          <v-btn text icon @click="close">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-toolbar>
         <v-card-text>
           <v-layout row justify-center>
-            <v-flex xl8 lg8 md8 sm8 xs8>
+            <v-flex md11 d-flex>
               <v-text-field
                 id="nombre"
                 label="Nombre"
-                v-model="est.nombre"
+                v-model="est_c.estudiante.nombre"
                 prepend-icon="mdi-script"
                 clearable
                 required
               ></v-text-field>
             </v-flex>
-            <v-flex xl8 lg8 md8 sm8 xs8>
+            <v-flex md11 d-flex>
               <v-text-field
                 id="codigo"
                 label="codigo"
-                v-model="est.codigo"
+                v-model="est_c.estudiante.codigo"
                 prepend-icon="mdi-script"
                 clearable
                 required
               ></v-text-field>
             </v-flex>
-            <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-select v-model="evento.carrera" label="carrera" :items="carreras">
-                <template slot="selection" slot-scope="data">
-                  <span>{{data.item.nombre}}</span>
-                </template>
-                <template slot="item" slot-scope="data">{{data.item.nombre}}</template>
-              </v-select>
-            </v-flex>
-            <v-flex xl8 lg8 md8 sm8 xs8>
+            <v-flex md11 d-flex>
               <v-text-field
-                v-model.number="est.abono"
+                v-model.number="est_c.abono"
                 type="number"
                 :counter="3"
                 prepend-icon="mdi-cash-multiple"
                 label="abono"
                 required
               ></v-text-field>
+            </v-flex>
+            <v-flex md11 d-flex>
+              <v-select
+                v-model="est_c.estudiante.carrera"
+                item-text="nombre"
+                item-value="id"
+                label="carrera"
+                :items="carreras"
+              ></v-select>
+            </v-flex>
+            <v-flex md11 d-flex>
+              <v-select
+                v-model="est_c.estudiante.regional"
+                item-text="nombre"
+                item-value="id"
+                label="regional"
+                :items="regionales"
+              ></v-select>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -67,57 +82,71 @@
 <script>
 export default {
   props: {
-    modal: {
-      type: Boolean,
+    congreso: {
+      type: Number,
       required: true,
-      default: false
+      default: 0
+    }
+  },
+  computed: {
+    modal() {
+      return this.$store.state.modalEstudianteNuevo;
     }
   },
   data: () => ({
     valido: true,
-    menu: false,
-    file: null,
-    lugares: [],
-    est: {
-      codigo: "",
-      nombre: "",
-      carrera: 0,
-      regional: 0,
-      abono: 0
+    carreras: [],
+    regionales: [],
+    est_c: {
+      abono: 0,
+      congreso: 0,
+      estudiante: {
+        codigo: "",
+        nombre: "",
+        carrera: 0,
+        regional: 0
+      }
     }
   }),
   methods: {
     async onClick() {
       if (this.$refs.form.validate()) {
-        const URL = this.$path + "congresos";
-        await this.$axios.post(URL, this.evento).catch(e => console.log(e));
+        const URL = this.$path + "estudiantes/"+this.congreso;
+        this.est_c.congreso=this.congreso;
+        let lista = [this.est_c];
+        await this.$axios.post(URL, lista).catch(e => console.log(e));
+        this.$emit("estudiante", this.est_c)
+        this.close();
       }
+    },
+    close() {
+      this.$store.state.modalEstudianteNuevo = false;
     },
     async reset() {
       await this.$refs.form.reset();
-      this.evento.fecha = new Date().toISOString().substr(0, 10);
     },
-    async listarLugares() {
+    async listarCarreras() {
       await this.$axios
-        .get(this.$path.concat("lugares"))
+        .get(this.$path.concat("carreras"))
         .then(response => {
-          this.lugares = response.data;
+          this.carreras = response.data;
         })
         .catch(e => console.log(e));
-      const lu = this.lugares;
-      this.evento.lugar = lu ? lu[0] : {};
-      // .catch(e =>
-      //   this.$router.push({
-      //     name: "error",
-      //     params: {
-      //       tipo: false
-      //     }
-      //   })
-      // );
+      this.est_c.estudiante.carrera = this.carreras ? this.carreras[0].id : 0;
+    },
+    async listarRegional() {
+      await this.$axios
+        .get(this.$path.concat("regionales"))
+        .then(response => {
+          this.regionales = response.data;
+        })
+        .catch(e => console.log(e));
+      this.est_c.estudiante.regional = this.regionales ? this.regionales[0].id : 0;
     }
   },
   created() {
-    this.listarLugares();
+    this.listarCarreras();
+    this.listarRegional();
   }
 };
 </script>

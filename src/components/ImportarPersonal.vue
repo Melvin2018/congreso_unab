@@ -120,8 +120,6 @@ export default {
       const lista = this.convertir();
       await this.$axios.post(URL, lista).catch(e => console.log(e));
       this.load = false;
-      this.$emit("cambio", true);
-
       this.dialogo = false;
     },
     close() {

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-layout row justify-center align-center>
-      <v-flex xl11 lg11 md11 sm11 xs11>
+        <v-col cols="12" lg="11">
         <v-card>
           <v-toolbar dark height="75">
             <v-layout justify-center align-center>
@@ -14,7 +14,7 @@
                     <Exportar id="exp" :nombre="congreso.nombre" :collection="excel"></Exportar>
                   </v-flex>
                   <v-flex xl4 lg4 md4 sm4 xs4>
-                    <v-btn fab small>
+                    <v-btn fab small @click="agregar" @estudiante="nuevoEstudiante">
                       <v-icon>mdi-account-plus</v-icon>
                     </v-btn>
                   </v-flex>
@@ -73,17 +73,20 @@
             </div>
           </v-card-text>
         </v-card>
-      </v-flex>
+        </v-col>
+      <nuevo :congreso="congreso.id"/>
     </v-layout>
   </v-container>
 </template>
 <script>
-import ImportarExcel from "../components/ImportarEstudiante";
-import Exportar from "../components/ExportarPDF";
+import ImportarExcel from "../components/ImportarEstudiante.vue";
+import Exportar from "../components/ExportarPDF.vue";
+import Nuevo from "../components/Nuevo_Estudiante.vue";
 export default {
   components: {
     Importar: ImportarExcel,
-    Exportar
+    Exportar,
+    Nuevo
   },
   computed: {
     parse() {
@@ -124,14 +127,20 @@ export default {
       { text: "Codigo", align: "center", value: "codigo" },
       { text: "Carrera", align: "center", value: "carrera" },
       { text: "Regional", align: "center", value: "regional" },
-      { text: "Break_Am", align: "center", value: "break_am" },
+      { text: "Break Am", align: "center", value: "break_am" },
       { text: "Almuerzo", align: "center", value: "almuerzo" },
-      { text: "Break_Pm", align: "center", value: "break_pm" },
+      { text: "Break Pm", align: "center", value: "break_pm" },
       { text: "Abono", align: "center", value: "abono" },
       { text: "Opcion", align: "center", value: "opciones" }
     ]
   }),
   methods: {
+    nuevoEstudiante(e) {
+      this.estudiantes.push(e);
+    },
+    agregar(){
+      this.$store.state.modalEstudianteNuevo=true;
+    },
     async listar() {
       const URL = this.$path + "estudiantes/" + this.$route.params.congreso;
       await this.$axios
