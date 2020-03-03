@@ -1,12 +1,24 @@
 <template>
   <v-app>
     <v-navigation-drawer v-model="drawer" :clipped="true" color="#F0FFFF" app
-    src="https://img.freepik.com/vector-gratis/fondo-degradado-concepto-tonos-verdes_23-2148387745.jpg?size=626&ext=jpg"
-    width="17%"
-    
+    class="red accent-4"
+      dark
     >
       <v-list square>
         <v-subheader><h1>MENÚ</h1></v-subheader>
+        <v-card >
+          <v-col>
+              <v-row justify="space-around">
+        <v-avatar
+            class="img-circle"
+            color="white"
+            size="125"
+          >
+            <v-img right src="https://portal.unab.edu.sv/assets/img/logo_unab.png"></v-img>
+          </v-avatar>
+              </v-row>
+          </v-col>
+          </v-card>
         <v-list-item-group v-model="opc"  color="#F9FBE7">
           <v-list-item
             link
@@ -37,7 +49,7 @@
       <template v-slot:img="{ props }">
         <v-img
           v-bind="props"
-          gradient="to top right, rgb(60, 179, 113), rgba(25,32,72,.7)"
+          gradient="to top right, rgb(51, 201, 32), rgba(20,20,20,.7)"
         ></v-img>
       </template>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>

@@ -3,7 +3,7 @@
     <v-layout row justify-center align-center>
         <v-col cols="12" lg="11">
         <v-card>
-          <v-toolbar dark height="75">
+          <v-toolbar color="primary" height="75">
             <v-layout justify-center align-center>
               <v-flex xl3 lg3 md3 sm3 xs3>
                 <v-layout align-center justify-start>
@@ -27,20 +27,22 @@
               </v-flex>
               <v-flex xl4 lg4 md4 sm4 xs4>
                 <v-layout justify-center align-center>
-                  <v-toolbar-title>Estudiante</v-toolbar-title>
+                  <v-toolbar-title><h3 class=" white--text">Estudiante</h3></v-toolbar-title>
                 </v-layout>
               </v-flex>
               <v-flex xl5 lg5 md5 sm5 xs5>
                 <v-layout justify-center>
-                  <v-flex xl5 lg5 md5 sm5 xs5>
-                    <v-select v-model="regional" label="regional" :items="regionales"></v-select>
+                  <v-flex xl5 lg5 md5 sm5 xs15>
+                    <v-select v-model="regional" label="Regional" :items="regionales" filled dense color="#E0F7FA"></v-select>
                   </v-flex>
                   <v-spacer></v-spacer>
-                  <v-flex xl6 lg6 md6 sm6 xs6>
+                  <v-flex xl6 lg6 md6 sm1 xs1>
                     <v-text-field
                       v-model="busqueda"
-                      label="busqueda"
+                      label="Búsqueda"
                       dark
+                      filled dense
+                       color="#E0F7FA"
                       append-icon="mdi-magnify"
                     ></v-text-field>
                   </v-flex>
@@ -96,7 +98,7 @@ export default {
   watch: {
     regional: function(x) {
       let lista =
-        x === "todas"
+        x === "Todas"
           ? this.listaCompleta
           : this.listaCompleta.filter(r => r.estudiante.regional.nombre == x);
 
@@ -108,8 +110,8 @@ export default {
   },
   data: () => ({
     load: true,
-    regional: "todas",
-    regionales: ["todas"],
+    regional: "Todas",
+    regionales: ["Todas"],
     pagina: 1,
     numPagina: 0,
     listaCompleta: [],

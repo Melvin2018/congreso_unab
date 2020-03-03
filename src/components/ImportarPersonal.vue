@@ -7,17 +7,18 @@
     </template>
     <v-col>
       <v-card>
-        <v-card-title class="blue lighten-1 justify-center">
+        <v-card-title class="green">
           <v-row align="center" justify="center">
             <img
-              src="https://cdn4.iconfinder.com/data/icons/jetflat-2-multimedia-vol-6/60/0043_076_upload_import_mac_app_application_window-512.png"
+              src="https://cdn0.iconfinder.com/data/icons/files-and-documents-24/64/file-copy-directory-import-open-512.png"
               height="40px"
               width="40px"
             />
+            <h2> . . . </h2>
             <h2 class="display-1 white--text font-weight-light">Importación de personal</h2>
           </v-row>
           <v-spacer></v-spacer>
-          <v-btn text icon @click="close">
+          <v-btn text icon @click="close" color="black">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
@@ -53,8 +54,8 @@
                         <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
                       </div>
                       <v-row align="center" justify="center">
-                        <v-spacer></v-spacer>
-                        <v-btn dark @click="importar()" :loading="load">
+                        <v-spacer><v-col></v-col></v-spacer>
+                        <v-btn color="red" @click="importar()" :loading="load">
                           <v-icon>mdi-location-enter</v-icon>importar
                         </v-btn>
                       </v-row>

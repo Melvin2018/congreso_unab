@@ -2,14 +2,15 @@
   <v-dialog v-model="modal" persistent max-width="700">
     <v-form ref="form" v-model="valido">
       <v-card>
-        <v-toolbar dark height="50">
+        <v-toolbar color="green" height="50">
           <v-col cols="12" lg="11">
             <v-layout justify-center row>
               <img
-                src="https://cdn3.iconfinder.com/data/icons/academy-5/64/time_and_date-schedule-administration-date-calendars-organization-calendar-interface-time-512.png"
+                src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678120-calendar-clock-512.png"
                 height="40px"
                 width="40px"
               />
+              <h2> . . . </h2>
               <h2 class="display-1 white--text font-weight-light">Nuevo congreso</h2>
             </v-layout>
           </v-col>

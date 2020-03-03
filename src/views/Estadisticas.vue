@@ -66,9 +66,13 @@
     <v-col></v-col>
               <v-card>
                  <v-data-table dense :headers="headers" :items="desserts" item-key="name" class="elevation-1"></v-data-table>
-
               </v-card>
             </v-card-text>
+                  <card>
+                    <div>
+                      <p>Hello</p>
+                    </div>
+                  </card>
           </v-card>
         </v-card>
       </v-flex>
@@ -160,5 +164,9 @@
         { text: 'FaltantesDeBreakPm', value: 'faltantesdebreakpm'},
       ],
     }),
+    methods:{
+      
+    }
   }
+  
 </script>
