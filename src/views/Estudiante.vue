@@ -1,42 +1,43 @@
 <template>
   <v-container fluid>
     <v-layout row justify-center align-center>
-        <v-col cols="12" lg="11">
+      <v-col cols="12" lg="11">
         <v-card>
-          <v-toolbar dark height="75">
+          <v-toolbar dark height="80" color="primary">
             <v-layout justify-center align-center>
-              <v-flex xl3 lg3 md3 sm3 xs3>
-                <v-layout align-center justify-start>
-                  <v-flex xl4 lg4 md4 sm4 xs4>
-                    <Importar :dialog="importar" :idcongreso="parse"></Importar>
-                  </v-flex>
-                  <v-flex xl4 lg4 md4 sm4 xs4 v-if="estudiantes.length > 0">
-                    <Exportar id="exp" :nombre="congreso.nombre" :collection="excel"></Exportar>
-                  </v-flex>
-                  <v-flex xl4 lg4 md4 sm4 xs4>
-                    <v-btn fab small @click="agregar" @estudiante="nuevoEstudiante">
-                      <v-icon>mdi-account-plus</v-icon>
-                    </v-btn>
-                  </v-flex>
-                  <v-flex xl4 lg4 md4 sm4 xs4>
-                    <v-btn fab small>
-                      <v-icon>mdi-email</v-icon>
-                    </v-btn>
-                  </v-flex>
-                </v-layout>
+              <v-flex md3 d-flex>
+                <v-flex md3 d-flex>
+                  <v-btn light fab small @click="importar">
+                    <v-icon>mdi-import</v-icon>
+                  </v-btn>
+                </v-flex>
+                <v-flex md3 d-flex v-if="estudiantes.length > 0">
+                  <v-btn light fab small @click="exportar">
+                    <v-icon>mdi-export</v-icon>
+                  </v-btn>
+                </v-flex>
+                <v-flex md3 d-flex v-if="estudiantes.length > 0">
+                  <v-btn light fab small>
+                    <v-icon>mdi-email</v-icon>
+                  </v-btn>
+                </v-flex>
+                <v-flex md3 d-flex>
+                  <v-btn light fab small @click="agregar">
+                    <v-icon>mdi-account-plus</v-icon>
+                  </v-btn>
+                </v-flex>
               </v-flex>
-              <v-flex xl4 lg4 md4 sm4 xs4>
-                <v-layout justify-center align-center>
-                  <v-toolbar-title>Estudiante</v-toolbar-title>
-                </v-layout>
-              </v-flex>
-              <v-flex xl5 lg5 md5 sm5 xs5>
-                <v-layout justify-center>
-                  <v-flex xl5 lg5 md5 sm5 xs5>
+              <v-spacer></v-spacer>
+              <v-flex md8 d-flex>
+                <v-layout row align-center>
+                  <v-flex md4 d-flex>
+                    <v-select multiple v-model="filtro" :items="filtros" label="filtro" clearable></v-select>
+                  </v-flex>
+                  <v-flex md4 d-flex>
                     <v-select v-model="regional" label="regional" :items="regionales"></v-select>
                   </v-flex>
                   <v-spacer></v-spacer>
-                  <v-flex xl6 lg6 md6 sm6 xs6>
+                  <v-flex md4 d-flex>
                     <v-text-field
                       v-model="busqueda"
                       label="busqueda"
@@ -63,9 +64,23 @@
               @page-count="numPagina = $event"
             >
               <template v-slot:item.opciones="{ item }">
-                <v-btn fab small @click="eliminar(item.id)" style="margin-left:2%">
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
+                <v-layout justify-center row>
+                  <v-btn fab small @click="qr(item)" style="margin-left:2%">
+                    <v-icon>mdi-qrcode</v-icon>
+                  </v-btn>
+                  <v-btn
+                    v-if="item.abono<congreso.precio"
+                    fab
+                    small
+                    @click="abonar(item)"
+                    style="margin-left:2%"
+                  >
+                    <v-icon>mdi-cash-usd</v-icon>
+                  </v-btn>
+                  <v-btn fab small @click="eliminar(item)" style="margin-left:2%">
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </v-layout>
               </template>
             </v-data-table>
             <div class="text-center pt-2">
@@ -73,24 +88,32 @@
             </div>
           </v-card-text>
         </v-card>
-        </v-col>
-      <nuevo :congreso="congreso.id"/>
+      </v-col>
+      <Importar />
+      <exportar :collection="excel" />
+      <nuevo />
+      <qr />
+      <abono />
     </v-layout>
   </v-container>
 </template>
 <script>
-import ImportarExcel from "../components/ImportarEstudiante.vue";
+import Importar from "../components/ImportarEstudiante.vue";
 import Exportar from "../components/ExportarPDF.vue";
 import Nuevo from "../components/Nuevo_Estudiante.vue";
+import Qr from "../components/QR.vue";
+import Abono from "../components/Abono.vue";
 export default {
   components: {
-    Importar: ImportarExcel,
+    Importar,
     Exportar,
-    Nuevo
+    Nuevo,
+    Qr,
+    Abono
   },
   computed: {
-    parse() {
-      return parseInt(this.$route.params.congreso, 10);
+    precio() {
+      return parseInt(this.congreso.precio, 10);
     }
   },
   watch: {
@@ -104,10 +127,37 @@ export default {
         x => x.nombre === "titulo"
       ).datos[0].regional = this.regional;
       this.completo(lista);
+    },
+    filtro: function(x) {
+      const todo = x.find(x => x == "todos") === undefined;
+      const no_autorizado = x.find(x => x == "autorizados") === undefined;
+      const pendiente = x.find(x => x == "solventes") === undefined;
+      if (x.length > 1) {
+        if (!todo) {
+          this.filtro.splice(todo, 1);
+        }
+      }
+      console.log(x);
+      let lista = !todo
+        ? this.listaCompleta
+        : this.listaCompleta.filter(x => {
+            if (no_autorizado & pendiente) {
+              return x.abono < this.congreso.precio;
+            } else if (no_autorizado & !pendiente) {
+              return x.abono === this.congreso.precio;
+            } else if (!no_autorizado & pendiente) {
+              return x.abono < this.congreso.precio;
+            } else if (!no_autorizado & !pendiente) {
+              return x.abono === this.precio;
+            }
+          });
+      this.completo(lista);
     }
   },
   data: () => ({
     load: true,
+    filtro: ["todos"],
+    filtros: ["todos", "autorizados", "solventes"],
     regional: "todas",
     regionales: ["todas"],
     pagina: 1,
@@ -120,7 +170,6 @@ export default {
       { nombre: "estudiantes", datos: [] }
     ],
     congreso: {},
-    importar: false,
     busqueda: "",
     columnas: [
       { text: "Nombre", align: "center", value: "nombre" },
@@ -135,11 +184,52 @@ export default {
     ]
   }),
   methods: {
-    nuevoEstudiante(e) {
-      this.estudiantes.push(e);
+    exportar() {
+      this.$store.state.estudiante.modalExportar = true;
     },
-    agregar(){
-      this.$store.state.modalEstudianteNuevo=true;
+    congresoVuew() {
+      this.$store.state.congreso = this.congreso;
+    },
+    agregar() {
+      this.$store.state.estudiante.modalNuevo = true;
+    },
+    importar() {
+      this.$store.state.estudiante.modalImportar = true;
+    },
+    abonar(estudiante) {
+      this.estudianteVuex(estudiante);
+      this.$store.state.estudiante.modalAbonar = true;
+    },
+    qr(estudiante) {
+      this.estudianteVuex(estudiante);
+      this.$store.state.estudiante.modalQr = true;
+    },
+    estudianteVuex(item) {
+      const est = this.listaCompleta.find(
+        x => x.estudiante.codigo === item.codigo
+      );
+      this.$store.state.estudiante.estudiante = est;
+    },
+    async eliminar(estudiante) {
+      const id = this.listaCompleta.find(
+        x => x.estudiante.codigo === estudiante.codigo
+      ).id;
+      await this.$axios
+        .delete(this.$path.concat("estudiante/").concat(id))
+        .then(x => {
+          if (x.data.respuesta) {
+            this.estudiantes.splice(this.estudiantes.indexOf(estudiante), 1);
+          } else {
+            Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: "no es posible eliminar este estudiante",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        })
+        .catch(e => console.log(e));
     },
     async listar() {
       const URL = this.$path + "estudiantes/" + this.$route.params.congreso;
@@ -161,7 +251,7 @@ export default {
       this.titulo();
       this.load = false;
     },
-    listaRegional() {
+    regionalListar() {
       this.$axios
         .get(this.$path + "regionales")
         .then(response => {
@@ -173,13 +263,13 @@ export default {
     },
     completo(lista) {
       this.estudiantes = [];
-      let num = 0;
+      let contabilizarResumen = 0;
       lista.forEach(x => {
-        num++;
+        contabilizarResumen++;
         let est = x.estudiante;
         let ac = x.accion;
         const estudiante = {
-          N: num,
+          N: contabilizarResumen,
           codigo: est.codigo,
           nombre: est.nombre,
           carrera: est.carrera.nombre,
@@ -195,7 +285,7 @@ export default {
       this.excel.find(x => x.nombre === "estudiantes").datos = this.estudiantes;
       this.resumen(lista);
     },
-    num(descripcion, lista) {
+    contabilizarResumen(descripcion, lista) {
       const li = Array.from(lista);
       let cantidad = 0;
       switch (descripcion) {
@@ -241,7 +331,7 @@ export default {
         "break_pm"
       ];
       descripciones.forEach(x => {
-        resumen.push(this.num(x, lista));
+        resumen.push(this.contabilizarResumen(x, lista));
       });
       this.excel.find(x => x.nombre === "resumen").datos = resumen;
     },
@@ -253,11 +343,12 @@ export default {
           regional: this.regional
         }
       ];
+      this.congresoVuew();
     }
   },
   mounted() {
     this.listar();
-    this.listaRegional();
+    this.regionalListar();
   }
 };
 </script>

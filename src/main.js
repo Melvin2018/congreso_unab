@@ -8,6 +8,8 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import vuetify from "@/plugins/vuetify";
 import VueSweetalert2 from 'vue-sweetalert2';
+import VueQrcode from '@chenfengyuan/vue-qrcode';
+import VueGoogleCharts from 'vue-google-charts'
 import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.prototype.$axios = axios;
 const options = {
@@ -15,8 +17,10 @@ const options = {
   cancelButtonColor: '#ff7674',
 };
 Vue.prototype.$path = "http://localhost:8000/api/v1/";
-Vue.use(VueAxios, axios);
+Vue.component(VueQrcode.name, VueQrcode);
 Vue.use(VueSweetalert2, options);
+Vue.use(VueAxios, axios);
+Vue.use(VueGoogleCharts);
 Vue.use(BootstrapVue);
 Vue.use(vuetify);
 Vue.use(Vuex);

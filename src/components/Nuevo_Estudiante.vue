@@ -81,17 +81,13 @@
 </template>
 <script>
 export default {
-  props: {
-    congreso: {
-      type: Number,
-      required: true,
-      default: 0
-    }
-  },
   computed: {
     modal() {
-      return this.$store.state.modalEstudianteNuevo;
-    }
+      return this.$store.state.estudiante.modalNuevo;
+    },
+    congreso(){
+      return this.$store.state.congreso.id;
+    },
   },
   data: () => ({
     valido: true,
@@ -117,10 +113,11 @@ export default {
         await this.$axios.post(URL, lista).catch(e => console.log(e));
         this.$emit("estudiante", this.est_c)
         this.close();
+        this.$router.go();
       }
     },
     close() {
-      this.$store.state.modalEstudianteNuevo = false;
+      this.$store.state.estudiante.modalNuevo = false;
     },
     async reset() {
       await this.$refs.form.reset();
