@@ -3,7 +3,6 @@
     <v-app-bar
       :clipped-left="true"
       app
-      color="#4CAF50"
       dark
       shrink-on-scroll
       prominent
@@ -61,7 +60,6 @@
         </v-slide-y-transition>
       </v-container>
     </v-content>
-
     <template>
       <v-footer padless color="amber darken-1" absolute class="font-weight-medium">
         <v-col class="text-center" cols="12">
@@ -72,11 +70,6 @@
     </template>
   </v-app>
 </template>
-  </v-app>
-
-  
-</template>
-
 <script>
 export default {
   data: () => ({
@@ -109,22 +102,13 @@ export default {
       }
     ]
   }),
-  watch: {
-    opc: x => {
-      localStorage.setItem("opcion", x);
-    }
-  },
-  created() {
-    if (localStorage.getItem("opcion") != null) {
-      this.opc = parseInt(localStorage.getItem("opcion"), 10);
-      //  this.$router.push(this.opciones[this.opc].ruta);
-    }
-  }
 };
 </script>
-
-<style scoped>
+<style>
 .border {
   border: 2px dashed rgba(20, 200, 212, 0.63);
+}
+.title{
+  margin-left: 5%;
 }
 </style>

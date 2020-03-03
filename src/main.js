@@ -24,6 +24,7 @@ firebase.initializeApp({
     appId: "1:889114227047:web:d9a1a28f4e04d6cebf7fc2",
     measurementId: "G-G7B5SM9B5E"
 });
+Vue.prototype.$path = "http://192.168.43.43:8000/api/v1/";
 const options = {
   confirmButtonColor: '#41b882',
   cancelButtonColor: '#ff7674',

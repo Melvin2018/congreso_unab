@@ -1,23 +1,21 @@
 <template>
   <v-dialog v-model="modal" persistent max-width="1000">
     <v-card>
-      <v-toolbar dark height="50">
+      <v-toolbar dark height="50" color="primary">
         <v-col cols="12" lg="11">
           <v-layout justify-center row>
-            <img
+            <v-img
               src="https://cdn0.iconfinder.com/data/icons/files-and-documents-24/64/file-copy-directory-import-open-512.png"
-              height="40px"
-              width="40px"
+              aspect-ratio="1"
+              max-width="30"
             />
-            <h2>. . .</h2>
-            <h2 class="display-1 white--text font-weight-light">Importación de Estudiantes</h2>
-
-            <v-spacer></v-spacer>
-            <v-btn text icon @click="close" color="black">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+            <span class="title">Importación de Estudiantes</span>
           </v-layout>
         </v-col>
+        <v-spacer></v-spacer>
+        <v-btn text icon @click="close" color="black">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-toolbar>
       <v-card-text>
         <v-col>
@@ -47,6 +45,7 @@
                       class="elevation-1"
                       @page-count="numPagina = $event"
                     >
+                      <template v-slot:item.carrera="{ item }">{{ carrera(item.carrera) }}</template>
                       <template v-slot:item.regional="{ item }">{{ regional(item.regional) }}</template>
                     </v-data-table>
                     <div class="text-center pt-2">
@@ -56,7 +55,7 @@
                       <v-col></v-col>
                     </v-spacer>
                     <v-row align="center" justify="center">
-                      <v-btn color="red" @click="importar()" :loading="load">
+                      <v-btn color="primary" @click="importar()" :loading="load">
                         <v-icon>mdi-location-enter</v-icon>importar
                       </v-btn>
                     </v-row>
@@ -94,10 +93,9 @@ export default {
     load: false,
     file: null,
     pagina: 1,
-    carreras: [],
-    regionales: [],
     valido: false,
     mensaje: "",
+    carreras: [],
     datos: [],
     numPagina: 0,
     columnas: [
@@ -111,15 +109,15 @@ export default {
   methods: {
     async importar() {
       this.load = true;
-      const URL = this.$path + "estudiantes/" + this.con;
+      const URL = this.$path + "estudiantes/" + this.congreso;
       const lista = this.convertir();
       await this.$axios.post(URL, lista).catch(e => console.log(e));
       this.load = false;
       this.close();
+      this.$router.go();
     },
     close() {
       this.$store.state.estudiante.modalImportar = false;
-      this.$router.go();
     },
     convertir() {
       const lista = [];
@@ -129,10 +127,8 @@ export default {
           estudiante: {
             nombre: x.nombre,
             codigo: x.codigo,
-            carrera: this.carreras.find(c => c.nombre == x.carrera).id,
-            regional: this.regionales.find(
-              c => c.alias.toUpperCase() === x.regional.toUpperCase()
-            ).id
+            carrera: x.carrera,
+            regional: x.regional
           },
           congreso: this.congreso
         });
@@ -141,17 +137,20 @@ export default {
     },
     regional(texto) {
       switch (texto) {
-        case "SS":
+        case 1:
           return "San Salvador";
-        case "CH":
-          return "Chalatenango";
-        case "SM":
+        case 2:
           return "San Miguel";
-        case "SO":
+        case 3:
+          return "Chalatenango";
+        case 4:
           return "Sonsonate";
         default:
-          return text;
+          return texto;
       }
+    },
+    carrera(id) {
+      return this.carreras.find(x => x.id === id).nombre;
     },
     validar(collection) {
       if (collection) {
@@ -184,7 +183,7 @@ export default {
         } else if ((num > 0) & (num < arrayResultados.length)) {
           if (num == 1) {
             this.mensaje = "error al encontar columna "
-              .concat(arrayResultados.find(x => x.r))
+              .concat(arrayResultados.find(x => x.r).n)
               .concat(" hace falta");
           } else {
             let texto = "error al encontar las columnas [";
@@ -205,26 +204,17 @@ export default {
       }
       return false;
     },
-    carrera() {
+    listarCarrera() {
       this.$axios
         .get(this.$path + "carreras")
         .then(response => {
           this.carreras = response.data;
         })
         .catch(e => console.log(e));
-    },
-    regional1() {
-      this.$axios
-        .get(this.$path + "regionales")
-        .then(response => {
-          this.regionales = response.data;
-        })
-        .catch(e => console.log(e));
     }
   },
-  mounted() {
-    this.carrera();
-    this.regional1();
+  mounted(){
+    this.listarCarrera();
   }
 };
 </script>
