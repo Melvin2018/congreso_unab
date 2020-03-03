@@ -175,11 +175,11 @@ export default {
         ? this.listaCompleta
         : this.listaCompleta.filter(x => {
             if (no_autorizado & pendiente) {
-              return (x.pagado == 0) & (x.abono < this.congreso.precio);
+              return (x.pagado == 0) & (x.abono < this.precio);
             } else if (no_autorizado & !pendiente) {
-              return (x.pagado == 0) & (x.abono === this.congreso.precio);
+              return (x.pagado == 0) & (x.abono == this.precio);
             } else if (!no_autorizado & pendiente) {
-              return (x.pagado == 1) & (x.abono < this.congreso.precio);
+              return (x.pagado == 1) & (x.abono < this.precio);
             } else if (!no_autorizado & !pendiente) {
               return (x.pagado == 1) & (x.abono === this.precio);
             }
@@ -270,6 +270,10 @@ export default {
       await this.$axios
         .put(this.$path.concat("autorizar/").concat(id))
         .catch(e => console.log(e));
+      this.estudiantes.find(x => x.codigo == estudiante.codigo).pagado = 1;
+      this.listaCompleta.find(
+        x => x.estudiante.codigo === estudiante.codigo
+      ).pagado = 1;
     },
     async listar() {
       const URL = this.$path + "estudiantes/" + this.$route.params.congreso;
@@ -319,7 +323,7 @@ export default {
           almuerzo: ac.almuerzo === 1 ? "si" : "no",
           break_pm: ac.break_pm === 1 ? "si" : "no",
           abono: x.abono,
-          pagado:x.pagado,
+          pagado: x.pagado
         };
         this.estudiantes.push(estudiante);
       });
