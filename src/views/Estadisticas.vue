@@ -47,7 +47,7 @@
                   <v-container fluid>
                     <v-row dense>
                       <v-layout justify-center row>
-                        <v-col cols="12" md="8" v-for="evento in estdudiante" :key="evento.id"></v-col>
+                        <v-col cols="12" md="8" v-for="estadisticas in estudiante" :key="estadisticas.id"></v-col>
                       </v-layout>
                     </v-row>
                   </v-container>
@@ -57,28 +57,51 @@
                 <v-tab-item>
                   <v-container fluid>
                     <v-layout justify-center row>
-                      <v-col cols="12" md="8" v-for="evento in personal" :key="evento.id"></v-col>
+                      <v-col cols="12" md="8" v-for="estadisticas in personal" :key="estadisticas.id"></v-col>
+                      <v-card class="mx-auto width"></v-card>
+                    </v-layout>
+                  </v-container>
+                </v-tab-item>
+                <v-tab-item>
+                  <v-container fluid>
+                    <v-layout justify-center row>
+                      <v-col cols="12" md="8" v-for="estadisticas in general" :key="estadisticas.id"></v-col>
                       <v-card class="mx-auto width"></v-card>
                     </v-layout>
                   </v-container>
                 </v-tab-item>
               </v-tab-item>
               <v-col></v-col>
+              
               <v-card>
-                <v-data-table
-                  dense
-                  :headers="headers"
-                  :items="desserts"
-                  item-key="name"
-                  class="elevation-1"
-                ></v-data-table>
+  <v-data-table
+    :headers="headers"
+    :items="desserts"
+    :items-per-page="5"
+    item-key="Resumen"
+    class="elevation-2"
+    :footer-props="{
+      showFirstLastPage: true,
+      firstIcon: 'mdi-arrow-collapse-left',
+      lastIcon: 'mdi-arrow-collapse-right',
+      prevIcon: 'mdi-minus',
+      nextIcon: 'mdi-plus'
+    }"
+  ></v-data-table>
               </v-card>
+              
             </v-card-text>
-                  <card>
+                  <v-card class="mx-auto" max-width="1000">
                     <div>
-                      <p>Hello</p>
-                    </div>
-                  </card>
+                    <GChart
+                      :settings="{packages: ['bar']}"    
+                      :data="chartData"
+                      :options="chartOptions"
+                      :createChart="(el, google) => new google.charts.Bar(el)"
+                      @ready="onChartReady"/>
+                     </div>
+                  </v-card>
+                  
           </v-card>
         </v-card>
       </v-flex>
@@ -87,87 +110,81 @@
 </template>
 
 <script>
-export default {
-  data: () => ({
-    desserts: [
-      {
-        name: "San Salvador",
-        esperados: 30.0,
-        registrados: 24,
-        faltantes: 4.0,
-        breakam: 6.0,
-        faltantesdebreakam: 5.0,
-        almuerzo: 8.0,
-        faltantesdealmuerzo: 9.0,
-        breakpm: 5.0,
-        faltantesdebreakpm: 8.0
-      },
-      {
-        name: "San Miguel",
-        esperados: 30.0,
-        registrados: 24,
-        faltantes: 4.0,
-        breakam: 6.0,
-        faltantesdebreakam: 5.0,
-        almuerzo: 8.0,
-        faltantesdealmuerzo: 9.0,
-        breakpm: 5.0,
-        faltantesdebreakpm: 8.0
-      },
-      {
-        name: "Chalatenango",
-        esperados: 30.0,
-        registrados: 24,
-        faltantes: 4.0,
-        breakam: 6.0,
-        faltantesdebreakam: 5.0,
-        almuerzo: 8.0,
-        faltantesdealmuerzo: 9.0,
-        breakpm: 5.0,
-        faltantesdebreakpm: 8.0
-      },
-      {
-        name: "Sonsonate",
-        esperados: 30.0,
-        registrados: 24,
-        faltantes: 4.0,
-        breakam: 6.0,
-        faltantesdebreakam: 5.0,
-        almuerzo: 8.0,
-        faltantesdealmuerzo: 9.0,
-        breakpm: 5.0,
-        faltantesdebreakpm: 8.0
-      },
-      {
-        name: "Total",
-        esperados: 30.0,
-        registrados: 24,
-        faltantes: 4.0,
-        breakam: 6.0,
-        faltantesdebreakam: 5.0,
-        almuerzo: 8.0,
-        faltantesdealmuerzo: 9.0,
-        breakpm: 5.0,
-        faltantesdebreakpm: 8.0
+  export default {
+    data () {
+      return {
+        headers: [
+          {
+            text: 'Dessert (100g serving)',
+            align: 'start',
+            value: 'name',
+          },
+          { text: 'Category', value: 'category' },
+        ],
+        desserts: [
+          {
+            name: 'Frozen Yogurt',
+            category: 'Ice cream',
+          },
+          {
+            name: 'Ice cream sandwich',
+            category: 'Ice cream',
+          },
+          {
+            name: 'Eclair',
+            category: 'Cookie',
+          },
+          {
+            name: 'Cupcake',
+            category: 'Pastry',
+          },
+          {
+            name: 'Gingerbread',
+            category: 'Cookie',
+          },
+          {
+            name: 'Jelly bean',
+            category: 'Candy',
+          },
+          {
+            name: 'Lollipop',
+            category: 'Candy',
+          },
+          {
+            name: 'Honeycomb',
+            category: 'Toffee',
+          },
+          {
+            name: 'Donut',
+            category: 'Pastry',
+          },
+          {
+            name: 'KitKat',
+            category: 'Candy',
+          },
+        ],
       }
-    ],
-    headers: [
-      {
-        text: "Departamento",
-        align: "left",
-        sortable: false,
-        value: "name"
-      },
-      { text: " Esperados", value: "esperados" },
-      { text: "Registrados", value: "registrados" },
-      { text: "Faltantes", value: "faltantes" },
-      { text: "BreakAm", value: "breakam" },
-      { text: "FaltantesDeBreakAm", value: "faltantesdebreakam" },
-      { text: "Almuerzo", value: "almuerzo" },
-      { text: "FaltantesDeAlmuerzo", value: "faltantesdealmuerzo" },
-      { text: "BreakPm", value: "breakpm" },
-      { text: "FaltantesDeBreakPm", value: "faltantesdebreakpm" }
-    ]
-  })
-};
+    },
+  }
 </script>
+
+
+
+//computed: {
+    estudiante() {
+      return this.estadisticas.filter(x => x.estado === 1);
+    },
+    personal() {
+      return this.estadisticas.filter(x => x.estado === 0);
+    },
+    general(){
+      return this.estadisticas.filter(x => x.estado === 0);
+    },
+  },
+  data: () => ({
+    load: true,
+    tabs: null,
+    pagina: 1,
+    numPagina: 0,
+    estadisticas: [],
+  }),
