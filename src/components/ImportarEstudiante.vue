@@ -5,16 +5,19 @@
         <v-col cols="12" lg="11">
           <v-layout justify-center row>
             <img
-              src="https://cdn4.iconfinder.com/data/icons/jetflat-2-multimedia-vol-6/60/0043_076_upload_import_mac_app_application_window-512.png"
+              src="https://cdn0.iconfinder.com/data/icons/files-and-documents-24/64/file-copy-directory-import-open-512.png"
               height="40px"
               width="40px"
             />
-            <h2 class="display-1 white--text font-weight-light">Importación de estudiantes</h2>
+            <h2>. . .</h2>
+            <h2 class="display-1 white--text font-weight-light">Importación de Estudiantes</h2>
+
+            <v-spacer></v-spacer>
+            <v-btn text icon @click="close" color="black">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
           </v-layout>
         </v-col>
-        <v-btn text icon @click="close">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
       </v-toolbar>
       <v-card-text>
         <v-col>
@@ -49,9 +52,11 @@
                     <div class="text-center pt-2">
                       <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
                     </div>
+                    <v-spacer>
+                      <v-col></v-col>
+                    </v-spacer>
                     <v-row align="center" justify="center">
-                      <v-spacer></v-spacer>
-                      <v-btn dark @click="importar()" :loading="load">
+                      <v-btn color="red" @click="importar()" :loading="load">
                         <v-icon>mdi-location-enter</v-icon>importar
                       </v-btn>
                     </v-row>

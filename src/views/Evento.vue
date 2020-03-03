@@ -21,7 +21,7 @@
                 <v-text-field
                   class="mx-8"
                   v-model="busqueda"
-                  label="Busqueda"
+                  label="Búsqueda"
                   filled
                   dense
                   color="#E0F7FA"
@@ -60,20 +60,25 @@
                               class="my-4 mx-4 text-center"
                               style="background-color: transparent;"
                             >
-                              <h3>{{ evento.nombre }}</h3>
+                              <h3 class="h3">{{ evento.nombre }}</h3>
                               <v-spacer></v-spacer>
-                              <h3>{{ evento.fecha }}</h3>
+                              <v-col></v-col>
+                              <v-col></v-col>
+                              <v-col></v-col>
                               <v-spacer></v-spacer>
-                              <h3>{{evento.lugar.nombre}}</h3>
+                              <h3 class="h3">{{evento.lugar.nombre}}</h3>
                             </v-card-title>
                           </v-img>
                           <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <h2>{{ evento.fecha }}</h2>
                             <v-spacer></v-spacer>
                             <v-btn
                               outlined
                               @click="listar(evento, 'estudiante')"
                               color="light-green darken-1"
-                            >
+                            > 
+                            
                               <v-icon>mdi-file-export</v-icon>estudiantes
                             </v-btn>
                             <v-btn outlined @click="listar(evento, 'personal')" color="blue">
@@ -220,6 +225,9 @@ export default {
 }
 .v-card:not(.on-hover) {
   opacity: 0.9;
+}
+.h3{
+  color:black; text-shadow: rgb(239, 243, 243) 0.1em 0.1em 0.2em
 }
 </style>
 

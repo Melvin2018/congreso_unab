@@ -40,8 +40,10 @@
                   <v-flex md4 d-flex>
                     <v-text-field
                       v-model="busqueda"
-                      label="busqueda"
+                      label="Búsqueda"
                       dark
+                      filled dense
+                       color="#E0F7FA"
                       append-icon="mdi-magnify"
                     ></v-text-field>
                   </v-flex>
@@ -119,7 +121,7 @@ export default {
   watch: {
     regional: function(x) {
       let lista =
-        x === "todas"
+        x === "Todas"
           ? this.listaCompleta
           : this.listaCompleta.filter(r => r.estudiante.regional.nombre == x);
 
@@ -158,8 +160,8 @@ export default {
     load: true,
     filtro: ["todos"],
     filtros: ["todos", "autorizados", "solventes"],
-    regional: "todas",
-    regionales: ["todas"],
+    regional: "Todas",
+    regionales: ["Todas"],
     pagina: 1,
     numPagina: 0,
     listaCompleta: [],

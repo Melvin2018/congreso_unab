@@ -2,18 +2,19 @@
   <v-dialog v-model="modal" persistent max-width="700">
     <v-form ref="form" v-model="valido">
       <v-card>
-        <v-toolbar dark height="50">
+        <v-toolbar color="green" height="50">
           <v-col cols="12" lg="11">
             <v-layout justify-center row>
               <img
-                src="https://cdn3.iconfinder.com/data/icons/academy-5/64/time_and_date-schedule-administration-date-calendars-organization-calendar-interface-time-512.png"
+                src="https://cdn4.iconfinder.com/data/icons/women-avatars-set-1-dot-version/380/3-512.png"
                 height="40px"
                 width="40px"
-              />
+              /> 
+              <h2> . . . </h2>
               <h2 class="display-1 white--text font-weight-light">Nuevo Estudiante</h2>
             </v-layout>
           </v-col>
-          <v-btn text icon @click="close">
+          <v-btn text icon @click="close" color="black">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
@@ -32,7 +33,7 @@
             <v-flex md11 d-flex>
               <v-text-field
                 id="codigo"
-                label="codigo"
+                label="Código"
                 v-model="est_c.estudiante.codigo"
                 prepend-icon="mdi-script"
                 clearable
@@ -45,7 +46,7 @@
                 type="number"
                 :counter="3"
                 prepend-icon="mdi-cash-multiple"
-                label="abono"
+                label="Abono"
                 required
               ></v-text-field>
             </v-flex>
@@ -54,7 +55,7 @@
                 v-model="est_c.estudiante.carrera"
                 item-text="nombre"
                 item-value="id"
-                label="carrera"
+                label="Carrera"
                 :items="carreras"
               ></v-select>
             </v-flex>
@@ -63,7 +64,7 @@
                 v-model="est_c.estudiante.regional"
                 item-text="nombre"
                 item-value="id"
-                label="regional"
+                label="Regional"
                 :items="regionales"
               ></v-select>
             </v-flex>
@@ -74,6 +75,7 @@
           <v-btn :disabled="!valido" color="success" class="mr-4" @click="onClick">Guardar</v-btn>
           <v-btn color="error" class="mr-4" @click="reset">Limpiar</v-btn>
           <v-spacer></v-spacer>
+          
         </v-card-actions>
       </v-card>
     </v-form>

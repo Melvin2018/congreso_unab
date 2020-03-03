@@ -19,7 +19,7 @@
               <v-select v-model="tipo" :items="tipos"></v-select>
             </v-col>
             <v-col cols="12" sm="7">
-              <v-text-field v-model="busqueda" dark append-icon="mdi-magnify"></v-text-field>
+              <v-text-field v-model="busqueda" label="Búsqueda" dense dark append-icon="mdi-magnify"></v-text-field>
             </v-col>
           </v-row>
         </v-col>
@@ -67,7 +67,7 @@ export default {
   watch: {
     tipo: function(x) {
       let lista =
-        x === "todos"
+        x === "Todos"
           ? this.listaCompleta
           : this.listaCompleta.filter(r => r.personal.tipo.nombre == x);
 
@@ -79,8 +79,8 @@ export default {
   },
   data: () => ({
     load: true,
-    tipo: "todos",
-    tipos: ["todos"],
+    tipo: "Todos",
+    tipos: ["Todos"],
     pagina: 1,
     numPagina: 0,
     listaCompleta: [],
