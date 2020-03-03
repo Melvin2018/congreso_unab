@@ -5,7 +5,7 @@
         <v-card>
           <v-toolbar dark height="80" color="primary">
             <v-layout justify-center align-center>
-              <v-flex md3 d-flex>
+              <v-flex md2 d-flex>
                 <v-flex md3 d-flex>
                   <v-btn light fab small @click="importar">
                     <v-icon>mdi-import</v-icon>
@@ -27,16 +27,42 @@
                   </v-btn>
                 </v-flex>
               </v-flex>
-              <v-spacer></v-spacer>
-              <v-flex md8 d-flex>
-                <v-layout row align-center>
+              <v-flex md4 d-flex>
+                <v-layout row justify-center align-center>
+                  <v-img
+                    src="https://cdn4.iconfinder.com/data/icons/women-avatars-set-1-dot-version/380/3-128.png"
+                    aspect-ratio="1"
+                    max-width="40"
+                  ></v-img>
+                  <span class="title">Estudiante</span>
+                </v-layout>
+              </v-flex>
+              <v-flex md6 d-flex>
+                <v-layout row align-center justify-center>
                   <v-flex md4 d-flex>
-                    <v-select multiple v-model="filtro" :items="filtros" label="filtro" clearable></v-select>
+                    <v-select
+                      multiple
+                      dark
+                      filled
+                      dense
+                      color="#E0F7FA"
+                      v-model="filtro"
+                      :items="filtros"
+                      label="filtro"
+                      clearable
+                    ></v-select>
                   </v-flex>
-                  <v-flex md4 d-flex>
-                    <v-select v-model="regional" label="regional" :items="regionales"></v-select>
+                  <v-flex md4 d-flex class="pa-3">
+                    <v-select
+                      dark
+                      filled
+                      dense
+                      color="#E0F7FA"
+                      v-model="regional"
+                      label="regional"
+                      :items="regionales"
+                    ></v-select>
                   </v-flex>
-                  <v-spacer></v-spacer>
                   <v-flex md4 d-flex>
                     <v-text-field
                       v-model="busqueda"
@@ -80,7 +106,10 @@
                   >
                     <v-icon>mdi-cash-usd</v-icon>
                   </v-btn>
-                  <v-btn fab small @click="eliminar(item)" style="margin-left:2%">
+                  <v-btn fab small v-if="item.pagado==0" @click="autorizar(item)">
+                    <v-icon>mdi-account-lock</v-icon>
+                  </v-btn>
+                  <v-btn fab small @click="eliminar(item)">
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </v-layout>
@@ -117,6 +146,9 @@ export default {
   computed: {
     precio() {
       return parseInt(this.congreso.precio, 10);
+    },
+    estudiante() {
+      return this.$store.state.estudiante.estudiante;
     }
   },
   watch: {
@@ -125,7 +157,6 @@ export default {
         x === "Todas"
           ? this.listaCompleta
           : this.listaCompleta.filter(r => r.estudiante.regional.nombre == x);
-
       this.excel.find(
         x => x.nombre === "titulo"
       ).datos[0].regional = this.regional;
@@ -140,18 +171,17 @@ export default {
           this.filtro.splice(todo, 1);
         }
       }
-      console.log(x);
       let lista = !todo
         ? this.listaCompleta
         : this.listaCompleta.filter(x => {
             if (no_autorizado & pendiente) {
-              return x.abono < this.congreso.precio;
+              return (x.pagado == 0) & (x.abono < this.congreso.precio);
             } else if (no_autorizado & !pendiente) {
-              return x.abono === this.congreso.precio;
+              return (x.pagado == 0) & (x.abono === this.congreso.precio);
             } else if (!no_autorizado & pendiente) {
-              return x.abono < this.congreso.precio;
+              return (x.pagado == 1) & (x.abono < this.congreso.precio);
             } else if (!no_autorizado & !pendiente) {
-              return x.abono === this.precio;
+              return (x.pagado == 1) & (x.abono === this.precio);
             }
           });
       this.completo(lista);
@@ -214,9 +244,8 @@ export default {
       this.$store.state.estudiante.estudiante = est;
     },
     async eliminar(estudiante) {
-      const id = this.listaCompleta.find(
-        x => x.estudiante.codigo === estudiante.codigo
-      ).id;
+      this.estudianteVuex(estudiante);
+      const id = this.estudiante.id;
       await this.$axios
         .delete(this.$path.concat("estudiante/").concat(id))
         .then(x => {
@@ -232,6 +261,14 @@ export default {
             });
           }
         })
+        .catch(e => console.log(e));
+    },
+    async autorizar(estudiante) {
+      const id = this.listaCompleta.find(
+        x => x.estudiante.codigo === estudiante.codigo
+      ).id;
+      await this.$axios
+        .put(this.$path.concat("autorizar/").concat(id))
         .catch(e => console.log(e));
     },
     async listar() {
@@ -266,13 +303,13 @@ export default {
     },
     completo(lista) {
       this.estudiantes = [];
-      let contabilizarResumen = 0;
+      let numEstudiante = 0;
       lista.forEach(x => {
-        contabilizarResumen++;
+        numEstudiante++;
         let est = x.estudiante;
         let ac = x.accion;
         const estudiante = {
-          N: contabilizarResumen,
+          N: numEstudiante,
           codigo: est.codigo,
           nombre: est.nombre,
           carrera: est.carrera.nombre,
@@ -281,14 +318,15 @@ export default {
           break_am: ac.break_am === 1 ? "si" : "no",
           almuerzo: ac.almuerzo === 1 ? "si" : "no",
           break_pm: ac.break_pm === 1 ? "si" : "no",
-          abono: x.abono
+          abono: x.abono,
+          pagado:x.pagado,
         };
         this.estudiantes.push(estudiante);
       });
       this.excel.find(x => x.nombre === "estudiantes").datos = this.estudiantes;
       this.resumen(lista);
     },
-    contabilizarResumen(descripcion, lista) {
+    numEstudiante(descripcion, lista) {
       const li = Array.from(lista);
       let cantidad = 0;
       switch (descripcion) {
@@ -334,7 +372,7 @@ export default {
         "break_pm"
       ];
       descripciones.forEach(x => {
-        resumen.push(this.contabilizarResumen(x, lista));
+        resumen.push(this.numEstudiante(x, lista));
       });
       this.excel.find(x => x.nombre === "resumen").datos = resumen;
     },
@@ -356,7 +394,7 @@ export default {
 };
 </script>
 <style scoped>
-#exp {
+button {
   margin-left: 2%;
 }
 </style>

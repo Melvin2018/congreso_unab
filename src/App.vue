@@ -81,22 +81,13 @@ export default {
       }
     ]
   }),
-  watch: {
-    opc: x => {
-      localStorage.setItem("opcion", x);
-    }
-  },
-  created() {
-    if (localStorage.getItem("opcion") != null) {
-      this.opc = parseInt(localStorage.getItem("opcion"), 10);
-      //  this.$router.push(this.opciones[this.opc].ruta);
-    }
-  }
 };
 </script>
-
-<style scoped>
+<style>
 .border {
   border: 2px dashed rgba(20, 200, 212, 0.63);
+}
+.title{
+  margin-left: 5%;
 }
 </style>

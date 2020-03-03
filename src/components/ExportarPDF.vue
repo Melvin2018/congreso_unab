@@ -31,7 +31,7 @@
       </v-card-text>
       <v-card-actions>
         <v-layout justify-end>
-          <v-btn color="primary">
+          <v-btn color="primary" @click="enviarCorreos">
             <v-icon>mdi-send</v-icon>
           </v-btn>
         </v-layout>
@@ -81,20 +81,7 @@ export default {
       this.$store.state.estudiante.modalExportar = false;
     },
     async enviarCorreos() {
-      // const URL = this.$path + "estudiantes/" + this.congreso.id;
-      // await this.$axios
-      //   .get(URL)
-      //   .then(response => {
-      //     this.listaCompleta = response.data.estudiantes;
-      //   })
-      //   .catch(e =>
-      //     this.$router.push({
-      //       name: "error",
-      //       params: {
-      //         tipo: false
-      //       }
-      //     })
-      //   );
+    this.exportPDF();
     },
     async listarPersonas() {
       const URL = this.$path + "personal/" + this.congreso.id;

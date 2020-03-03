@@ -56,18 +56,16 @@
                           :class="{ 'on-hover': hover }"
                         >
                           <v-img class="black--text align-start" :src="evento.fondo" height="260px">
-                            <v-card-title
+                            <v-layout
                               class="my-4 mx-4 text-center"
                               style="background-color: transparent;"
+                              column
                             >
-                              <h3 class="h3">{{ evento.nombre }}</h3>
-                              <v-spacer></v-spacer>
-                              <v-col></v-col>
-                              <v-col></v-col>
-                              <v-col></v-col>
-                              <v-spacer></v-spacer>
-                              <h3 class="h3">{{evento.lugar.nombre}}</h3>
-                            </v-card-title>
+                              <v-layout row align-start justify-space-around>
+                                <h1>{{ evento.nombre }}</h1>
+                                <h1>{{evento.lugar.nombre}}</h1>
+                              </v-layout>
+                            </v-layout>
                           </v-img>
                           <v-card-actions>
                             <v-spacer></v-spacer>
@@ -77,8 +75,7 @@
                               outlined
                               @click="listar(evento, 'estudiante')"
                               color="light-green darken-1"
-                            > 
-                            
+                            >
                               <v-icon>mdi-file-export</v-icon>estudiantes
                             </v-btn>
                             <v-btn outlined @click="listar(evento, 'personal')" color="blue">
@@ -97,20 +94,29 @@
                   </v-layout>
                 </v-tab-item>
                 <v-tab-item>
-                  <v-container fluid>
-                    <v-row dense>
-                      <v-col v-for="evento in inactivos" :key="evento.id" :cols="12">
-                        <v-card class="mx-auto width">
-                          <v-img class="black--text align-end" :src="evento.fondo" height="260px">
-                            <v-card-title>
-                              <h3>{{ evento.nombre }}</h3>
-                              <v-spacer></v-spacer>
-                              <h3>{{ evento.fecha }}</h3>
-                              <v-spacer></v-spacer>
-                              <h3>{{evento.lugar.nombre}}</h3>
-                            </v-card-title>
+                  <v-layout justify-center row>
+                    <v-col cols="12" md="8" v-for="evento in inactivos" :key="evento.id">
+                      <v-hover v-slot:default="{ hover }">
+                        <v-card
+                          class="mx-auto width"
+                          :elevation="hover ? 24 : 4"
+                          :class="{ 'on-hover': hover }"
+                        >
+                          <v-img class="black--text align-start" :src="evento.fondo" height="260px">
+                            <v-layout
+                              class="my-4 mx-4 text-center"
+                              style="background-color: transparent;"
+                              column
+                            >
+                              <v-layout row align-start justify-space-around>
+                                <h1>{{ evento.nombre }}</h1>
+                                <h1>{{evento.lugar.nombre}}</h1>
+                              </v-layout>
+                            </v-layout>
                           </v-img>
                           <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <h2>{{ evento.fecha }}</h2>
                             <v-spacer></v-spacer>
                             <v-btn
                               outlined
@@ -127,9 +133,9 @@
                             </v-btn>
                           </v-card-actions>
                         </v-card>
-                      </v-col>
-                    </v-row>
-                  </v-container>
+                      </v-hover>
+                    </v-col>
+                  </v-layout>
                 </v-tab-item>
               </v-tabs-items>
             </v-card-text>
@@ -141,7 +147,7 @@
 </template>
 <script>
 import Nuevo from "@/components/Nuevo_Evento.vue";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 export default {
   components: {
     Nuevo
@@ -226,8 +232,9 @@ export default {
 .v-card:not(.on-hover) {
   opacity: 0.9;
 }
-.h3{
-  color:black; text-shadow: rgb(239, 243, 243) 0.1em 0.1em 0.2em
+.h3 {
+  color: black;
+  text-shadow: rgb(239, 243, 243) 0.1em 0.1em 0.2em;
 }
 </style>
 
