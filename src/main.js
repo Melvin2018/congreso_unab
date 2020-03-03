@@ -12,7 +12,7 @@ import VueQrcode from '@chenfengyuan/vue-qrcode';
 import VueGoogleCharts from 'vue-google-charts'
 import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.prototype.$axios = axios;
-Vue.prototype.$path = "http://206.189.206.157:8000/api/v1/";
+Vue.prototype.$path = "http://192.168.43.43:8000/api/v1/";
 const options = {
   confirmButtonColor: '#41b882',
   cancelButtonColor: '#ff7674',

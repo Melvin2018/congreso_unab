@@ -3,7 +3,6 @@
     <v-app-bar
       :clipped-left="true"
       app
-      color="#4CAF50"
       dark
       shrink-on-scroll
       prominent
@@ -11,27 +10,20 @@
       src="https://www.unab.edu.sv/wp-content/uploads/2017/10/MG_4175-web.jpg"
     >
       <template v-slot:img="{ props }">
-        <v-img v-bind="props" gradient="to top right, rgb(60, 179, 113), rgba(25,32,72,.7)"></v-img>
+        <v-img v-bind="props" gradient="to top right, rgb(70, 200, 97), rgba(25,32,72,.7)"></v-img>
       </template>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>
         <h2>Administración de Congresos UNAB</h2>
       </v-toolbar-title>
     </v-app-bar>
-    <v-navigation-drawer
-      v-model="drawer"
-      :clipped="true"
-      color="#F0FFFF"
-      app
-      src="https://img.freepik.com/vector-gratis/fondo-degradado-concepto-tonos-verdes_23-2148387745.jpg?size=626&ext=jpg"
-      width="14%"
-    >
+    <v-navigation-drawer v-model="drawer" :clipped="true" dark app width="14%">
       <v-list square>
         <v-subheader>
           <h1>MENÚ</h1>
         </v-subheader>
-        <v-list-item-group v-model="opc" color="#F9FBE7">
-          <v-list-item link v-for="opc in opciones" :key="opc.ruta" :href="opc.ruta">
+        <v-list-item-group v-model="opc">
+          <v-list-item dark link v-for="opc in opciones" :key="opc.ruta" :href="opc.ruta">
             <v-list-item-icon>
               <v-img height="40px" width="40px" :src="opc.img"></v-img>
             </v-list-item-icon>
@@ -47,7 +39,6 @@
         </v-slide-y-transition>
       </v-container>
     </v-content>
-
     <template>
       <v-footer padless color="amber darken-1" absolute class="font-weight-medium">
         <v-col class="text-center" cols="12">
@@ -58,11 +49,6 @@
     </template>
   </v-app>
 </template>
-  </v-app>
-
-  
-</template>
-
 <script>
 export default {
   data: () => ({

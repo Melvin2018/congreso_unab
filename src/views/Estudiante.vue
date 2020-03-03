@@ -42,8 +42,9 @@
                       v-model="busqueda"
                       label="Búsqueda"
                       dark
-                      filled dense
-                       color="#E0F7FA"
+                      filled
+                      dense
+                      color="#E0F7FA"
                       append-icon="mdi-magnify"
                     ></v-text-field>
                   </v-flex>

@@ -1,23 +1,21 @@
 <template>
   <v-dialog v-model="modal" persistent max-width="1000">
     <v-card>
-      <v-toolbar dark height="50">
+      <v-toolbar dark height="50" color="primary">
         <v-col cols="12" lg="11">
           <v-layout justify-center row>
-            <img
+            <v-img
               src="https://cdn0.iconfinder.com/data/icons/files-and-documents-24/64/file-copy-directory-import-open-512.png"
-              height="40px"
-              width="40px"
+              aspect-ratio="1"
+              max-width="30"
             />
-            <h2>. . .</h2>
-            <h2 class="display-1 white--text font-weight-light">Importación de Estudiantes</h2>
-
+            <label class="">Importación de Estudiantes</label>
+          </v-layout>
+        </v-col>
             <v-spacer></v-spacer>
             <v-btn text icon @click="close" color="black">
               <v-icon>mdi-close</v-icon>
             </v-btn>
-          </v-layout>
-        </v-col>
       </v-toolbar>
       <v-card-text>
         <v-col>
