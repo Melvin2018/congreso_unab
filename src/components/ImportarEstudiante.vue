@@ -28,7 +28,7 @@
             show-size
             counter
           ></v-file-input>
-          <xlsx-read :file="file">
+          <xlsx-read :file="file" v-if="file">
             <template #default="{loading}">
               <v-row v-if="loading" justify="center">
                 <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -36,6 +36,7 @@
               <xlsx-json v-else>
                 <template #default="{collection}">
                   <v-col v-if="validar(collection)">
+                    <v-label>{{collection.length}} estudiantes</v-label>
                     <v-data-table
                       :headers="columnas"
                       :items="collection"
@@ -213,7 +214,7 @@ export default {
         .catch(e => console.log(e));
     }
   },
-  mounted(){
+  mounted() {
     this.listarCarrera();
   }
 };

@@ -13,31 +13,20 @@
         <h2>Administración de Congresos UNAB</h2>
       </v-toolbar-title>
     </v-app-bar>
-    <v-navigation-drawer
-      v-model="drawer"
-      :clipped="true"
-      dark
-      app
-      width="14%"
-      class="gray"
-    >
+    <v-navigation-drawer v-model="drawer" :clipped="true" app width="14%" dark>
       <v-list square>
         <v-subheader>
           <h1>MENÚ</h1>
         </v-subheader>
-        <v-card >
+        <v-card>
           <v-col>
-              <v-row justify="space-around">
-        <v-avatar
-            class="img-circle"
-            color="white"
-            size="125"
-          >
-            <v-img right src="https://portal.unab.edu.sv/assets/img/logo_unab.png"></v-img>
-          </v-avatar>
-              </v-row>
+            <v-row justify="space-around">
+              <v-avatar class="img-circle" color="white" size="125">
+                <v-img right src="https://portal.unab.edu.sv/assets/img/logo_unab.png"></v-img>
+              </v-avatar>
+            </v-row>
           </v-col>
-          </v-card>
+        </v-card>
         <v-list-item-group v-model="opc" color="#F9FBE7">
           <v-list-item link v-for="opc in opciones" :key="opc.ruta" :href="opc.ruta">
             <v-list-item-icon>
@@ -96,14 +85,14 @@ export default {
           "https://cdn2.iconfinder.com/data/icons/essential-web-1-1/50/lesson-presentation-keynote-report-statistics-512.png"
       }
     ]
-  }),
+  })
 };
 </script>
 <style>
 .border {
   border: 2px dashed rgba(20, 200, 212, 0.63);
 }
-.title{
+.title {
   margin-left: 5%;
 }
 </style>
