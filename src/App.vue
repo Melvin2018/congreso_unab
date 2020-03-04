@@ -3,16 +3,12 @@
     <v-app-bar
       :clipped-left="true"
       app
-      dark
-      shrink-on-scroll
-      prominent
-      fade-img-on-scroll
-      src="https://www.unab.edu.sv/wp-content/uploads/2017/10/MG_4175-web.jpg"
+      color="blue-grey lighten-1"
     >
       <template v-slot:img="{ props }">
         <v-img v-bind="props" gradient="to top right, rgb(51, 201, 32), rgba(20,20,20,.7)"></v-img>
       </template>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" dark></v-app-bar-nav-icon>
       <v-toolbar-title>
         <h2>Administración de Congresos UNAB</h2>
       </v-toolbar-title>
@@ -20,11 +16,10 @@
     <v-navigation-drawer
       v-model="drawer"
       :clipped="true"
-      color="#F0FFFF"
+      dark
       app
       width="14%"
-      class="red accent-4"
-      dark
+      class="gray"
     >
       <v-list square>
         <v-subheader>

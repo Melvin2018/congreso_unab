@@ -7,7 +7,7 @@
             <v-row justify="center">
               <v-row align="center" justify="center">
                 <v-spacer></v-spacer>
-                <h2 class="display-1 white--text font-weight-light">Estadisticas</h2>
+                <h2 class="display-1 white--text font-weight-light">Estadísticas</h2>
               </v-row>
               <v-spacer></v-spacer>
               <v-btn
@@ -43,55 +43,21 @@
                 <v-progress-circular indeterminate color="primary"></v-progress-circular>
               </div>
               <v-tabs-items v-model="tabs">
-                <v-tab-item>
-                  <v-container fluid>
-                    <v-row dense>
-                      <v-layout justify-center row>
-                        <v-col cols="12" md="8" v-for="estadisticas in estudiante" :key="estadisticas.id"></v-col>
-                      </v-layout>
-                    </v-row>
-                  </v-container>
-                </v-tab-item>
-              </v-tabs-items>
-              <v-tab-item v-model="tabs">
-                <v-tab-item>
-                  <v-container fluid>
-                    <v-layout justify-center row>
-                      <v-col cols="12" md="8" v-for="estadisticas in personal" :key="estadisticas.id"></v-col>
-                      <v-card class="mx-auto width"></v-card>
-                    </v-layout>
-                  </v-container>
-                </v-tab-item>
-                <v-tab-item>
-                  <v-container fluid>
-                    <v-layout justify-center row>
-                      <v-col cols="12" md="8" v-for="estadisticas in general" :key="estadisticas.id"></v-col>
-                      <v-card class="mx-auto width"></v-card>
-                    </v-layout>
-                  </v-container>
-                </v-tab-item>
-              </v-tab-item>
-              <v-col></v-col>
-              
-              <v-card>
-  <v-data-table
-    :headers="headers"
-    :items="desserts"
-    :items-per-page="5"
-    item-key="Resumen"
-    class="elevation-2"
-    :footer-props="{
-      showFirstLastPage: true,
-      firstIcon: 'mdi-arrow-collapse-left',
-      lastIcon: 'mdi-arrow-collapse-right',
-      prevIcon: 'mdi-minus',
-      nextIcon: 'mdi-plus'
-    }"
-  ></v-data-table>
+                <v-tab-item>   
+                  <v-col></v-col>
+              <v-layout>
+                
+              <v-card class="left" width="344" height="295" color="primary" >
+                <v-data-table
+                  :headers="headers"
+                  :items="desserts"
+                  hide-default-footer
+                  item-key="name"
+                  class="elevation-2"
+                ></v-data-table>
               </v-card>
-              
-            </v-card-text>
-                  <v-card class="mx-auto" max-width="1000">
+                    <v-spacer></v-spacer>
+                  <v-card class="white--text align-end" width="775">
                     <div>
                     <GChart
                       :settings="{packages: ['bar']}"    
@@ -101,7 +67,40 @@
                       @ready="onChartReady"/>
                      </div>
                   </v-card>
-                  
+                  </v-layout>
+                </v-tab-item>
+                <v-tab-item>
+                  <v-col></v-col>
+              <v-layout>
+                
+              <v-card class="left" width="344" height="295" color="primary" >
+                <v-data-table
+                  :headers="headers"
+                  :items="desserts"
+                  hide-default-footer
+                  item-key="name"
+                  class="elevation-2"
+                ></v-data-table>
+              </v-card>
+                    <v-spacer></v-spacer>
+                  <v-card class="white--text align-end" width="775" color="primary">
+                    <div>
+                    <GChart
+                      :settings="{packages: ['bar']}"    
+                      :data="chartData"
+                      :options="chartOptions"
+                      :createChart="(el, google) => new google.charts.Bar(el)"
+                      @ready="onChartReady"/>
+                     </div>
+                  </v-card>
+                  </v-layout>
+
+                </v-tab-item>
+                <v-tab-item>
+
+                </v-tab-item>
+              </v-tabs-items>
+              </v-card-text >
           </v-card>
         </v-card>
       </v-flex>
@@ -110,81 +109,79 @@
 </template>
 
 <script>
+import { GChart } from 'vue-google-charts'
   export default {
+    name: 'App',
+  components: {
+    GChart
+  },
     data () {
       return {
+        tabs:null,
         headers: [
           {
-            text: 'Dessert (100g serving)',
+            text: 'Resumen',
             align: 'start',
             value: 'name',
           },
-          { text: 'Category', value: 'category' },
+          { text: 'Cantidad', value: 'total' },
         ],
         desserts: [
           {
-            name: 'Frozen Yogurt',
-            category: 'Ice cream',
+            name: 'Esperados',
+            total: '45',
           },
           {
-            name: 'Ice cream sandwich',
-            category: 'Ice cream',
+            name: 'Registados',
+            total: '40',
           },
           {
-            name: 'Eclair',
-            category: 'Cookie',
+            name: 'Breack_Am',
+            total: '13',
           },
           {
-            name: 'Cupcake',
-            category: 'Pastry',
+            name: 'Almuerzo',
+            total: '25',
           },
           {
-            name: 'Gingerbread',
-            category: 'Cookie',
-          },
-          {
-            name: 'Jelly bean',
-            category: 'Candy',
-          },
-          {
-            name: 'Lollipop',
-            category: 'Candy',
-          },
-          {
-            name: 'Honeycomb',
-            category: 'Toffee',
-          },
-          {
-            name: 'Donut',
-            category: 'Pastry',
-          },
-          {
-            name: 'KitKat',
-            category: 'Candy',
+            name: 'Breack_Pm',
+            total: '45',
           },
         ],
+
+        chartsLib: null, 
+      chartData: [
+        ['Resumen', 'Esperados', 'Registrados'],
+        ['Registrados', 45, 40],
+        ['Breack_Am', 45, 13],
+        ['Almuerzo', 45, 25],
+        ['Breack_Pm', 45, 45]
+      ]
       }
     },
+    computed: {
+    chartOptions () {
+      if (!this.chartsLib) return null
+      return this.chartsLib.charts.Bar.convertOptions({
+        chart: {
+          title: 'Congreso de enfermeria',
+          subtitle: 'Esperados y registrados, durante el congreso'
+        },
+        bars: 'vertical', // Required for Material Bar Charts.
+        hAxis: { format: 'decimal' },
+        height: 400,
+        colors: ['#9C27B0', '#1DE9B6']
+      })
+    }
+  },
+  methods: {
+    onChartReady (chart, google) {
+      this.chartsLib = google
+    }
+  }
   }
 </script>
 
 
 
-//computed: {
-    estudiante() {
-      return this.estadisticas.filter(x => x.estado === 1);
-    },
-    personal() {
-      return this.estadisticas.filter(x => x.estado === 0);
-    },
-    general(){
-      return this.estadisticas.filter(x => x.estado === 0);
-    },
-  },
-  data: () => ({
-    load: true,
-    tabs: null,
-    pagina: 1,
-    numPagina: 0,
-    estadisticas: [],
-  }),
+
