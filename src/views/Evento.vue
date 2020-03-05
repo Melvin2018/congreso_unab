@@ -62,8 +62,8 @@
                               column
                             >
                               <v-layout row align-start justify-space-around>
-                                <h1>{{ evento.nombre }}</h1>
-                                <h1>{{evento.lugar.nombre}}</h1>
+                                <h1 style="justify-content: start-center;" class="sombreado">{{ evento.nombre }}</h1>
+                                <h1 style="padding: 25% 0;" class="sombreado">{{evento.lugar.nombre}}</h1>
                               </v-layout>
                             </v-layout>
                           </v-img>
@@ -232,9 +232,12 @@ export default {
 .v-card:not(.on-hover) {
   opacity: 0.9;
 }
-.h3 {
-  color: black;
-  text-shadow: rgb(239, 243, 243) 0.1em 0.1em 0.2em;
+.sombreado {
+  color: white;
+   text-shadow: black 0.1em 0.1em 0.4em
+}
+.h1{
+  line-height: 200px;
 }
 </style>
 

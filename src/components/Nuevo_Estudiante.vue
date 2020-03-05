@@ -21,7 +21,7 @@
         <v-card-text>
           <v-layout row justify-center>
             <v-flex md11 d-flex>
-              <v-text-field
+              <v-text-field color="green"
                 id="nombre"
                 label="Nombre"
                 v-model="est_c.estudiante.nombre"
@@ -31,7 +31,7 @@
               ></v-text-field>
             </v-flex>
             <v-flex md11 d-flex>
-              <v-text-field
+              <v-text-field color="green"
                 id="codigo"
                 label="Código"
                 v-model="est_c.estudiante.codigo"
@@ -41,7 +41,7 @@
               ></v-text-field>
             </v-flex>
             <v-flex md11 d-flex>
-              <v-text-field
+              <v-text-field color="green"
                 v-model.number="est_c.abono"
                 type="number"
                 :counter="3"
@@ -51,7 +51,7 @@
               ></v-text-field>
             </v-flex>
             <v-flex md11 d-flex>
-              <v-select
+              <v-select color="green"
                 v-model="est_c.estudiante.carrera"
                 item-text="nombre"
                 item-value="id"
@@ -60,7 +60,7 @@
               ></v-select>
             </v-flex>
             <v-flex md11 d-flex>
-              <v-select
+              <v-select color="green"
                 v-model="est_c.estudiante.regional"
                 item-text="nombre"
                 item-value="id"

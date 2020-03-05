@@ -17,14 +17,13 @@
             <h2> . . . </h2>
             <h2 class="display-1 white--text font-weight-light">Importación de personal</h2>
           </v-row>
-          <v-spacer></v-spacer>
           <v-btn text icon @click="close" color="black">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text>
           <v-col>
-            <v-file-input
+            <v-file-input color="green"
               label="Archivo a importar"
               filled
               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

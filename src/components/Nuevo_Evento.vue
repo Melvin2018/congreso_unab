@@ -14,14 +14,14 @@
               <h2 class="display-1 white--text font-weight-light">Nuevo congreso</h2>
             </v-layout>
           </v-col>
-          <v-btn text icon @click="close">
+          <v-btn text icon @click="close" color="black">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
         <v-card-text>
           <v-layout row justify-center>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-text-field
+              <v-text-field color="green"
                 id="nombre"
                 label="Nombre del evento"
                 v-model="evento.nombre"
@@ -41,7 +41,7 @@
                 min-width="290px"
               >
                 <template v-slot:activator="{ on }">
-                  <v-text-field
+                  <v-text-field color="green"
                     v-model="evento.fecha"
                     label="fecha del evento"
                     prepend-icon="mdi-calendar-range"
@@ -54,7 +54,7 @@
               </v-menu>
             </v-flex>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-text-field
+              <v-text-field color="green"
                 v-model.number="evento.precio"
                 type="number"
                 :counter="3"
@@ -65,7 +65,7 @@
               ></v-text-field>
             </v-flex>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-select
+              <v-select color="green"
                 v-model="evento.lugar"
                 label="Lugar"
                 item-value="id"
@@ -74,7 +74,7 @@
               ></v-select>
             </v-flex>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-select
+              <v-select color="green"
                 v-model="categoria"
                 label="Categoria"
                 item-text="nombre"

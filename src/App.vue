@@ -3,22 +3,21 @@
     <v-app-bar
       :clipped-left="true"
       app
-      color="blue-grey lighten-1"
+      color="blue-grey lighten-3"
     >
       <template v-slot:img="{ props }">
-        <v-img v-bind="props" gradient="to top right, rgb(51, 201, 32), rgba(20,20,20,.7)"></v-img>
       </template>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" dark></v-app-bar-nav-icon>
       <v-toolbar-title>
         <h2>Administración de Congresos UNAB</h2>
       </v-toolbar-title>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" :clipped="true" app width="14%" dark>
+    <v-navigation-drawer v-model="drawer" :clipped="true" app width="14%" color="light-blue darken-2">
       <v-list square>
         <v-subheader>
           <h1>MENÚ</h1>
         </v-subheader>
-        <v-card>
+        <v-card color="blue-grey lighten-3">
           <v-col>
             <v-row justify="space-around">
               <v-avatar class="img-circle" color="white" size="125">
@@ -27,13 +26,16 @@
             </v-row>
           </v-col>
         </v-card>
+         <v-divider></v-divider>
         <v-list-item-group v-model="opc" color="#F9FBE7">
+          <v-list dark nav>
           <v-list-item link v-for="opc in opciones" :key="opc.ruta" :href="opc.ruta">
             <v-list-item-icon>
               <v-img height="40px" width="40px" :src="opc.img"></v-img>
             </v-list-item-icon>
             <v-list-item-content>{{ opc.titulo }}</v-list-item-content>
           </v-list-item>
+          </v-list>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>

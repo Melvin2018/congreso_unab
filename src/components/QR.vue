@@ -1,18 +1,13 @@
 <template>
   <v-dialog v-model="modal" persistent max-width="625">
     <v-card>
-      <v-toolbar dark height="50">
+      <v-toolbar color="green" height="50">
         <v-col cols="12" lg="11">
           <v-layout justify-center row>
-            <img
-              src="https://cdn3.iconfinder.com/data/icons/academy-5/64/time_and_date-schedule-administration-date-calendars-organization-calendar-interface-time-512.png"
-              height="40px"
-              width="40px"
-            />
             <h2 class="display-1 white--text font-weight-light">Detalles</h2>
           </v-layout>
         </v-col>
-        <v-btn text icon @click="close">
+        <v-btn text icon @click="close" color="black">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
@@ -40,7 +35,7 @@
                         {{estudiante.estudiante.nombre}}
                       </span>
                       <span>
-                        <strong>Codigo:</strong>
+                        <strong>Código:</strong>
                         {{estudiante.estudiante.codigo}}
                       </span>
                       <span>

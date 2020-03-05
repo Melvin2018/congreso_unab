@@ -48,7 +48,7 @@
                       color="#E0F7FA"
                       v-model="filtro"
                       :items="filtros"
-                      label="filtro"
+                      label="Filtro"
                       clearable
                     ></v-select>
                   </v-flex>
@@ -59,7 +59,7 @@
                       dense
                       color="#E0F7FA"
                       v-model="regional"
-                      label="regional"
+                      label="Regional"
                       :items="regionales"
                     ></v-select>
                   </v-flex>
@@ -255,7 +255,7 @@ export default {
             Swal.fire({
               position: "top-end",
               icon: "error",
-              title: "no es posible eliminar este estudiante",
+              title: "No es posible eliminar este estudiante",
               showConfirmButton: false,
               timer: 1500
             });

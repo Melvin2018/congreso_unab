@@ -2,24 +2,25 @@
   <v-dialog v-model="modal" persistent max-width="625">
     <v-form ref="form" v-model="valido">
       <v-card>
-        <v-toolbar dark height="50">
+        <v-toolbar color="green" height="50">
           <v-col cols="12" lg="11">
             <v-layout justify-center row>
-              <img
-                src="https://cdn3.iconfinder.com/data/icons/academy-5/64/time_and_date-schedule-administration-date-calendars-organization-calendar-interface-time-512.png"
-                height="40px"
-                width="40px"
-              />
-              <h2 class="display-1 white--text font-weight-light">Abono</h2>
+            <v-img
+              src="https://cdn4.iconfinder.com/data/icons/finance-and-banking-free/64/Finance_loan_money-512.png"
+              aspect-ratio="1"
+              max-width="30"
+            />
+            <h3>. . . </h3>
+              <span class="display-1 white--text font-weight-light">Abono</span>
             </v-layout>
           </v-col>
-          <v-btn text icon @click="close">
+          <v-btn text icon @click="close" color="black">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
         <v-card-text>
-          <v-text-field
-            label="abono"
+          <v-text-field color="green"
+            label="Abono"
             :rules="[
       v =>
        valor(v) || 'Abono sobrepasa el precio'
