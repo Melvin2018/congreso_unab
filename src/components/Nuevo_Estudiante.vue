@@ -6,7 +6,7 @@
           <v-col cols="12" lg="11">
             <v-layout justify-center row>
               <img
-                src="https://cdn4.iconfinder.com/data/icons/women-avatars-set-1-dot-version/380/3-512.png"
+                :src="require('@/assets/3-128.png')"
                 height="40px"
                 width="40px"
               /> 

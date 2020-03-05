@@ -58,6 +58,9 @@
 </template>
 <script>
 export default {
+
+
+
   data: () => ({
     drawer: null,
     opc: 0,
@@ -74,12 +77,14 @@ export default {
         img:
           "https://cdn3.iconfinder.com/data/icons/election-world-1/64/senate-congress-government-senator-political-512.png"
       },
-      {
-        ruta: "/configuracion",
-        titulo: "Administracion",
-        img:
-          "https://cdn0.iconfinder.com/data/icons/miscellaneous-21-line/128/administration_regime_people_admin-512.png"
-      },
+
+      //{
+       // ruta: "/configuracion",
+        //titulo: "Administracion",
+        //img:
+         // "https://cdn0.iconfinder.com/data/icons/miscellaneous-21-line/128/administration_regime_people_admin-512.png"
+      //},
+      
       {
         ruta: "/estadisticas",
         titulo: "Estadisticas",

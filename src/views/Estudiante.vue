@@ -30,7 +30,7 @@
               <v-flex md4 d-flex>
                 <v-layout row justify-center align-center>
                   <v-img
-                    src="https://cdn4.iconfinder.com/data/icons/women-avatars-set-1-dot-version/380/3-128.png"
+                    :src="require('@/assets/3-128.png')"
                     aspect-ratio="1"
                     max-width="40"
                   ></v-img>

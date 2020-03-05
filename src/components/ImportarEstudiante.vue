@@ -5,7 +5,7 @@
         <v-col cols="12" lg="11">
           <v-layout justify-center row>
             <v-img
-              src="https://cdn0.iconfinder.com/data/icons/files-and-documents-24/64/file-copy-directory-import-open-512.png"
+              :src="require('@/assets/file-directory.png')"
               aspect-ratio="1"
               max-width="30"
             />
