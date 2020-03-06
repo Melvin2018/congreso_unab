@@ -176,6 +176,7 @@ export default {
     pagina: 1,
     numPagina: 0,
     eventos: [],
+    todos: [],
     busqueda: ""
   }),
   methods: {
@@ -209,6 +210,7 @@ export default {
       await this.$axios
         .get(this.$path.concat("congresos"))
         .then(response => {
+          this.todos = response.data.congresos;
           this.eventos = response.data.congresos;
         })
         .catch(e =>
@@ -229,6 +231,15 @@ export default {
         }
       });
       this.$store.state.congreso = congreso;
+    }
+  },
+  watch: {
+    busqueda: function(x) {
+      console.log(
+        (this.eventos = this.todos.filter(function(el) {
+          return el.nombre.toLowerCase().indexOf(x.toLowerCase()) > -1;
+        }))
+      );
     }
   },
   mounted() {

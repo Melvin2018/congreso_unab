@@ -8,7 +8,7 @@
               <v-flex md11>
                 <titulo titulo="Estadisticas" />
               </v-flex>
-              <v-btn class="ma-6" outlined color="secundary" grow>
+              <v-btn class="ma-6" outlined color="secundary" grow @click="actulizar">
                 <v-icon>mdi-history</v-icon>
               </v-btn>
             </v-layout>
@@ -98,6 +98,9 @@ export default {
         { text: "Resumen", align: "center", value: "name" },
         { text: "Cantidad", align: "center", value: "cantidad" }
       ];
+    },
+    actulizar() {
+      this.$router.go();
     }
   },
   mounted() {
