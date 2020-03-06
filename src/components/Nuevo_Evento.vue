@@ -4,16 +4,9 @@
       <v-card>
         <v-toolbar color="green" height="50">
           <v-col cols="12" lg="11">
-            <v-layout justify-center row>
-              <img
-                src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678120-calendar-clock-512.png"
-                height="40px"
-                width="40px"
-              />
-              <h2> . . . </h2>
-              <h2 class="display-1 white--text font-weight-light">Nuevo congreso</h2>
-            </v-layout>
+           <titulo titulo="Nuevo congreso"/>
           </v-col>
+           <v-spacer></v-spacer>
           <v-btn text icon @click="close" color="black">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -116,7 +109,11 @@
   </v-dialog>
 </template>
 <script>
+import Titulo from "@/components/Titulo.vue";
 export default {
+  components:{
+    Titulo
+  },
   computed: {
     fondosCategoria() {
       const lista = this.fondos.filter(

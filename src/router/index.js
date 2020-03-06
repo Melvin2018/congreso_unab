@@ -8,46 +8,51 @@ import Evento from '@/views/Evento.vue'
 import Estadisticas from '@/views/Estadisticas.vue'
 Vue.use(VueRouter);
 const routes = [{
-    path: "/",
-    name: "inicio",
-    component: Home
-  },
+        path: "/",
+        name: "inicio",
+        component: Home
+    },
+    {
+        path: "/evento/vista",
+        name: "evento",
+        component: Evento
+    },
+    {
+        path: "/estadisticas",
+        name: "estadisticas",
+        component: Estadisticas
+    },
+    {
+        path: "/estudiante/vista/:congreso",
+        name: "estudiante",
+        component: Estudiante
+    },
+    {
+        path: "/personal/vista/:congreso",
+        name: "personal",
+        component: Personal
+    },
+    {
+        path: "/estadisticas/vista/:congreso",
+        name: "estadistica",
+        component: Estadisticas
+    },
 
-  {
-    path: "/estudiante/vista/:congreso",
-    name: "estudiante",
-    component: Estudiante
-  },
-  {
-    path: "/personal/vista/:congreso",
-    name: "personal",
-    component: Personal
-  },
-  {
-    path: "/evento/vista",
-    name: "evento",
-    component: Evento
-  },
-  {
-    path: "/estadisticas",
-    name: "estadisticas",
-    component: Estadisticas
-  },
-   {
-    path: "*",
-    component: NotFound
-  }, ,
-  {
-    path: "/error/:tipo",
-    name: "error",
-    component: NotFound
-  }
+    {
+        path: "*",
+        component: NotFound
+    }, ,
+    {
+        path: "/error/:tipo",
+        name: "error",
+        component: NotFound
+    }
 
 ];
 const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes
+    mode: "history",
+    base: process.env.BASE_URL,
+    routes
 });
 
 export default router;

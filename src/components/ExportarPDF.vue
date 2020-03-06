@@ -15,7 +15,7 @@ export default {
       return this.$store.state.congreso;
     },
     modal() {
-      return this.$store.state.estudiante.modalExportar;
+      return this.$store.state.exportar;
     }
   },
   watch: {

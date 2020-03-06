@@ -1,103 +1,88 @@
 <template>
-  <v-dialog v-model="dialogo" persistent max-width="1000">
-    <template v-slot:activator="{ on }">
-      <v-btn v-on="on" icon dark style="margin-left:7%">
-        <v-icon>mdi-import</v-icon>
-      </v-btn>
-    </template>
-    <v-col>
-      <v-card>
-        <v-card-title class="green">
-          <v-row align="center" justify="center">
-            <img
-              src="https://cdn0.iconfinder.com/data/icons/files-and-documents-24/64/file-copy-directory-import-open-512.png"
-              height="40px"
-              width="40px"
-            />
-            <h2> . . . </h2>
-            <h2 class="display-1 white--text font-weight-light">Importación de personal</h2>
-          </v-row>
-          <v-btn text icon @click="close" color="black">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-col>
-            <v-file-input color="green"
-              label="Archivo a importar"
-              filled
-              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-              prepend-icon="mdi-file"
-              v-model="file"
-              show-size
-              counter
-            ></v-file-input>
-            <xlsx-read :file="file">
-              <template #default="{loading}">
-                <v-row v-if="loading" justify="center">
-                  <v-progress-circular indeterminate color="primary"></v-progress-circular>
-                </v-row>
-                <xlsx-json v-else>
-                  <template #default="{collection}">
-                    <v-col v-if="validar(collection)">
-                      <v-data-table
-                        :headers="columnas"
-                        :items="collection"
-                        :page.sync="pagina"
-                        :items-per-page="7"
-                        hide-default-footer
-                        class="elevation-1"
-                        @page-count="numPagina = $event"
-                      ></v-data-table>
-                      <div class="text-center pt-2">
-                        <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
-                      </div>
-                      <v-row align="center" justify="center">
-                        <v-spacer><v-col></v-col></v-spacer>
-                        <v-btn color="red" @click="importar()" :loading="load">
-                          <v-icon>mdi-location-enter</v-icon>importar
-                        </v-btn>
-                      </v-row>
-                    </v-col>
-                    <v-alert prominent type="error" v-else-if="collection">
-                      <v-row align="center">
-                        <v-col class="grow">{{ mensaje }}</v-col>
-                      </v-row>
-                    </v-alert>
-                  </template>
-                </xlsx-json>
-              </template>
-            </xlsx-read>
-          </v-col>
-        </v-card-text>
-      </v-card>
-    </v-col>
+  <v-dialog v-model="modal" persistent max-width="1000">
+    <v-card>
+      <v-toolbar dark color="primary" height="50">
+        <v-col cols="12" lg="11">
+          <titulo titulo="Importar personal" />
+        </v-col>
+        <v-spacer></v-spacer>
+        <v-btn text icon @click="close" color="black">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-card-text>
+        <v-col>
+          <v-file-input
+            color="green"
+            label="Archivo a importar"
+            filled
+            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            prepend-icon="mdi-file"
+            v-model="file"
+            show-size
+            counter
+          ></v-file-input>
+          <xlsx-read :file="file" v-if="file">
+            <template #default="{loading}">
+              <v-row v-if="loading" justify="center">
+                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+              </v-row>
+              <xlsx-json v-else>
+                <template #default="{collection}">
+                  <v-col v-if="validar(collection)">
+                    <v-data-table
+                      :headers="columnas"
+                      :items="collection"
+                      :page.sync="pagina"
+                      :items-per-page="7"
+                      hide-default-footer
+                      class="elevation-1"
+                      @page-count="numPagina = $event"
+                    ></v-data-table>
+                    <div class="text-center pt-2">
+                      <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
+                    </div>
+                    <v-row align="center" justify="center">
+                      <v-spacer>
+                        <v-col></v-col>
+                      </v-spacer>
+                      <v-btn color="red" @click="importar()" :loading="load">
+                        <v-icon>mdi-location-enter</v-icon>importar
+                      </v-btn>
+                    </v-row>
+                  </v-col>
+                  <v-alert prominent type="error" v-else-if="collection">
+                    <v-row align="center">
+                      <v-col class="grow">{{ mensaje }}</v-col>
+                    </v-row>
+                  </v-alert>
+                </template>
+              </xlsx-json>
+            </template>
+          </xlsx-read>
+        </v-col>
+      </v-card-text>
+    </v-card>
   </v-dialog>
 </template>
 <script>
 import { XlsxRead, XlsxJson } from "vue-xlsx/dist/vue-xlsx.es.js";
+import Titulo from "@/components/Titulo.vue";
 export default {
   components: {
     XlsxRead,
-    XlsxJson
+    XlsxJson,
+    Titulo
   },
-  props: {
-    dialog: {
-      type: Boolean,
-      required: true,
-      default: false
+  computed: {
+    modal() {
+      return this.$store.state.personal.modalImportar;
     },
-    idcongreso: {
-      type: Number,
-      required: true,
-      default: 0
+    congreso() {
+      return this.$store.state.congreso.id;
     }
   },
-  watch: {
-    dialog: x => (this.dialogo = x)
-  },
   data: () => ({
-    dialogo: false,
     load: false,
     file: null,
     pagina: 1,
@@ -116,14 +101,15 @@ export default {
   methods: {
     async importar() {
       this.load = true;
-      const URL = this.$path + "personal_congreso";
+      const URL = this.$path + "personal/" + this.congreso;
       const lista = this.convertir();
       await this.$axios.post(URL, lista).catch(e => console.log(e));
       this.load = false;
-      this.dialogo = false;
+      this.close();
+      this.$router.go();
     },
     close() {
-      this.dialogo = false;
+      this.$store.state.personal.modalImportar = false;
     },
     convertir() {
       const lista = [];
@@ -132,12 +118,10 @@ export default {
           personal: {
             nombre: x.nombre,
             email: x.correo,
-            tipo: this.tipos.find(
-              c => c.nombre.toUpperCase() === x.tipo.toUpperCase()
-            ).id,
+            tipo: x.tipo,
             funcion: x.cargo
           },
-          congreso: this.idcongreso
+          congreso: this.congreso
         });
       });
       return lista;

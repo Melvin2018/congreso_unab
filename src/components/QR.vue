@@ -1,11 +1,9 @@
 <template>
   <v-dialog v-model="modal" persistent max-width="625">
     <v-card>
-      <v-toolbar color="green" height="50">
+      <v-toolbar dark color="primary" height="50">
         <v-col cols="12" lg="11">
-          <v-layout justify-center row>
-            <h2 class="display-1 white--text font-weight-light">Detalles</h2>
-          </v-layout>
+          <titulo titulo="Detalles" />
         </v-col>
         <v-btn text icon @click="close" color="black">
           <v-icon>mdi-close</v-icon>
@@ -80,7 +78,11 @@
   </v-dialog>
 </template>
 <script>
+import Titulo from "@/components/Titulo.vue";
 export default {
+  components: {
+    Titulo
+  },
   computed: {
     modal() {
       return this.$store.state.estudiante.modalQr;

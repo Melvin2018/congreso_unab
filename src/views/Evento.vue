@@ -3,36 +3,33 @@
     <v-layout row wrap>
       <v-flex>
         <v-card>
-          <v-toolbar-title dense class="light-blue darken-2 justify-center">
-            <v-row justify="center">
-              <v-col>
-                <v-btn class="mx-2" fab dark color="success" @click="modal()">
-                  <v-icon size="x-large" dark>mdi-plus</v-icon>
+          <v-toolbar dark color="primary" height="80">
+            <v-layout align-center justify-space-around>
+              <v-flex md2>
+                <v-btn small fab dark color="success" @click="modal()">
+                  <v-icon>mdi-plus</v-icon>
                 </v-btn>
-                <nuevo @evento="nuevoCongreso" />
-              </v-col>
+              </v-flex>
+              <v-flex md6>
+                <titulo titulo="Congresos" />
+              </v-flex>
               <v-spacer></v-spacer>
-              <v-row align="center" justify="center">
-                <v-spacer></v-spacer>
-                <h2 class="display-1 white--text font-weight-light">Congresos</h2>
-              </v-row>
-              <v-spacer></v-spacer>
-              <v-col cols="12" sm="6" md="4">
+              <v-layout row align-center justify-end>
                 <v-text-field
-                  class="mx-8"
                   v-model="busqueda"
                   label="Búsqueda"
+                  dark
                   filled
                   dense
                   color="#E0F7FA"
                   append-icon="mdi-magnify"
                 ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-toolbar-title>
+              </v-layout>
+            </v-layout>
+          </v-toolbar>
           <v-card>
-            <v-card-title class="blue lighten-3">
-              <v-tabs fixed-tabs v-model="tabs" centered background-color="blue lighten-5">
+            <v-toolbar>
+              <v-tabs fixed-tabs v-model="tabs" centered>
                 <v-tab>
                   <h3>Activos</h3>
                 </v-tab>
@@ -40,7 +37,7 @@
                   <h3>inactivos</h3>
                 </v-tab>
               </v-tabs>
-            </v-card-title>
+            </v-toolbar>
             <v-card-text>
               <div class="text-center" v-if="load">
                 <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -55,21 +52,28 @@
                           :elevation="hover ? 24 : 4"
                           :class="{ 'on-hover': hover }"
                         >
-                          <v-img class="black--text align-start" :src="evento.fondo" height="260px">
-                            <v-layout
-                              class="my-4 mx-4 text-center"
-                              style="background-color: transparent;"
-                              column
-                            >
+                          <v-img
+                            aspect-ratio="1"
+                            :src="evento.fondo"
+                            height="260px"
+                            gradient="to top, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                          >
+                            <template v-slot:placeholder>
+                              <v-row class="fill-height ma-0" align="center" justify="center">
+                                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                              </v-row>
+                            </template>
+                            <v-layout class="my-4 mx-4 text-center" column>
                               <v-layout row align-start justify-space-around>
-                                <h1 style="justify-content: start-center;" class="sombreado">{{ evento.nombre }}</h1>
-                                <h1 style="padding: 25% 0;" class="sombreado">{{evento.lugar.nombre}}</h1>
+                                <h1 class="sombreado">{{ evento.nombre }}</h1>
+                                <h1 class="sombreado">{{evento.lugar.nombre}}</h1>
                               </v-layout>
                             </v-layout>
                           </v-img>
                           <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <h2>{{ evento.fecha }}</h2>
+                            <div class="ml-5">
+                              <h2 dark>{{ evento.fecha }}</h2>
+                            </div>
                             <v-spacer></v-spacer>
                             <v-btn
                               outlined
@@ -109,8 +113,8 @@
                               column
                             >
                               <v-layout row align-start justify-space-around>
-                                <h1>{{ evento.nombre }}</h1>
-                                <h1>{{evento.lugar.nombre}}</h1>
+                                <h1 class="sombreado">{{ evento.nombre }}</h1>
+                                <h1 class="sombreado">{{evento.lugar.nombre}}</h1>
                               </v-layout>
                             </v-layout>
                           </v-img>
@@ -131,6 +135,9 @@
                             <v-btn outlined @click="listar(evento, 'estadistica')" color="orange">
                               <v-icon>mdi-graph</v-icon>estadisticas
                             </v-btn>
+                            <v-btn outlined @click="eliminar(evento)" color="red">
+                              <v-icon>mdi-delete</v-icon>
+                            </v-btn>
                           </v-card-actions>
                         </v-card>
                       </v-hover>
@@ -140,6 +147,7 @@
               </v-tabs-items>
             </v-card-text>
           </v-card>
+          <nuevo @evento="nuevoCongreso" />
         </v-card>
       </v-flex>
     </v-layout>
@@ -147,10 +155,12 @@
 </template>
 <script>
 import Nuevo from "@/components/Nuevo_Evento.vue";
+import Titulo from "@/components/Titulo.vue";
 import Swal from "sweetalert2";
 export default {
   components: {
-    Nuevo
+    Nuevo,
+    Titulo
   },
   computed: {
     activos() {
@@ -218,6 +228,7 @@ export default {
           congreso: congreso.id
         }
       });
+      this.$store.state.congreso = congreso;
     }
   },
   mounted() {
@@ -234,9 +245,9 @@ export default {
 }
 .sombreado {
   color: white;
-   text-shadow: black 0.1em 0.1em 0.4em
+  text-shadow: black 0.1em 0.1em 0.4em;
 }
-.h1{
+.h1 {
   line-height: 200px;
 }
 </style>

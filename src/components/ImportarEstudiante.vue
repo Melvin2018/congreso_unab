@@ -1,18 +1,11 @@
 <template>
   <v-dialog v-model="modal" persistent max-width="1000">
     <v-card>
-      <v-toolbar dark height="50" color="primary">
+      <v-toolbar dark color="primary" height="50">
         <v-col cols="12" lg="11">
-          <v-layout justify-center row>
-            <v-img
-              :src="require('@/assets/file-directory.png')"
-              aspect-ratio="1"
-              max-width="30"
-            />
-            <span class="title">Importación de Estudiantes</span>
-          </v-layout>
+          <titulo titulo="Importar estudiante" />
         </v-col>
-        <v-spacer></v-spacer>
+         <v-spacer></v-spacer>
         <v-btn text icon @click="close" color="black">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -77,10 +70,12 @@
 </template>
 <script>
 import { XlsxRead, XlsxJson } from "vue-xlsx/dist/vue-xlsx.es.js";
+import Titulo from "@/components/Titulo.vue";
 export default {
   components: {
     XlsxRead,
-    XlsxJson
+    XlsxJson,
+    Titulo
   },
   computed: {
     modal() {

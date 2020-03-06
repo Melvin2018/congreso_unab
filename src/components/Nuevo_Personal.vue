@@ -6,7 +6,6 @@
           <v-col cols="12" lg="11">
             <titulo titulo="Nuevo Estudiante" />
           </v-col>
-           <v-spacer></v-spacer>
           <v-btn text icon @click="close" color="black">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -18,7 +17,7 @@
                 color="green"
                 id="nombre"
                 label="Nombre"
-                v-model="est_c.estudiante.nombre"
+                v-model="personal.personal.nombre"
                 prepend-icon="mdi-script"
                 clearable
                 required
@@ -27,9 +26,9 @@
             <v-flex md11 d-flex>
               <v-text-field
                 color="green"
-                id="codigo"
-                label="Código"
-                v-model="est_c.estudiante.codigo"
+                id="Email"
+                label="Email"
+                v-model="personal.personal.email"
                 prepend-icon="mdi-script"
                 clearable
                 required
@@ -38,32 +37,21 @@
             <v-flex md11 d-flex>
               <v-text-field
                 color="green"
-                v-model.number="est_c.abono"
-                type="number"
-                :counter="3"
-                prepend-icon="mdi-cash-multiple"
-                label="Abono"
-                required
+                id="Funcion"
+                label="Funcion"
+                v-model="personal.personal.funcion"
+                prepend-icon="mdi-script"
+                clearable
               ></v-text-field>
             </v-flex>
             <v-flex md11 d-flex>
               <v-select
                 color="green"
-                v-model="est_c.estudiante.carrera"
+                v-model="personal.personal.tipo"
                 item-text="nombre"
                 item-value="id"
-                label="Carrera"
-                :items="carreras"
-              ></v-select>
-            </v-flex>
-            <v-flex md11 d-flex>
-              <v-select
-                color="green"
-                v-model="est_c.estudiante.regional"
-                item-text="nombre"
-                item-value="id"
-                label="Regional"
-                :items="regionales"
+                label="Tipo"
+                :items="tipos"
               ></v-select>
             </v-flex>
           </v-layout>
@@ -86,7 +74,7 @@ export default {
   },
   computed: {
     modal() {
-      return this.$store.state.estudiante.modalNuevo;
+      return this.$store.state.personal.modalNuevo;
     },
     congreso() {
       return this.$store.state.congreso.id;
@@ -94,60 +82,46 @@ export default {
   },
   data: () => ({
     valido: true,
-    carreras: [],
-    regionales: [],
-    est_c: {
-      abono: 0,
-      congreso: 0,
-      estudiante: {
-        codigo: "",
+    tipos: [],
+    personal: {
+      personal: {
         nombre: "",
-        carrera: 0,
-        regional: 0
-      }
+        email: "",
+        tipo: 0,
+        funcion: ""
+      },
+      congreso: 0
     }
   }),
   methods: {
     async onClick() {
       if (this.$refs.form.validate()) {
-        const URL = this.$path + "estudiantes/" + this.congreso;
-        this.est_c.congreso = this.congreso;
-        let lista = [this.est_c];
+        const URL = this.$path + "personal/" + this.congreso;
+        this.personal.congreso = this.congreso;
+        let lista = [this.personal];
         await this.$axios.post(URL, lista).catch(e => console.log(e));
         this.close();
         this.$router.go();
       }
     },
     close() {
-      this.$store.state.estudiante.modalNuevo = false;
+      this.$store.state.personal.modalNuevo = false;
     },
     async reset() {
       await this.$refs.form.reset();
     },
-    async listarCarreras() {
+    async listarTipos() {
       await this.$axios
-        .get(this.$path.concat("carreras"))
+        .get(this.$path.concat("tipos"))
         .then(response => {
-          this.carreras = response.data;
+          this.tipos = response.data;
         })
         .catch(e => console.log(e));
-      this.est_c.estudiante.carrera = this.carreras ? this.carreras[0].id : 0;
-    },
-    async listarRegional() {
-      await this.$axios
-        .get(this.$path.concat("regionales"))
-        .then(response => {
-          this.regionales = response.data;
-        })
-        .catch(e => console.log(e));
-      this.est_c.estudiante.regional = this.regionales
-        ? this.regionales[0].id
-        : 0;
+      this.personal.personal.tipo = this.tipos ? this.tipos[0].id : 0;
     }
   },
   created() {
-    this.listarCarreras();
-    this.listarRegional();
+    this.listarTipos();
   }
 };
 </script>

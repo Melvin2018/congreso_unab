@@ -28,14 +28,7 @@
                 </v-flex>
               </v-flex>
               <v-flex md4 d-flex>
-                <v-layout row justify-center align-center>
-                  <v-img
-                    :src="require('@/assets/3-128.png')"
-                    aspect-ratio="1"
-                    max-width="40"
-                  ></v-img>
-                  <span class="title">Estudiante</span>
-                </v-layout>
+                <titulo titulo="Estudiante" />
               </v-flex>
               <v-flex md6 d-flex>
                 <v-layout row align-center justify-center>
@@ -131,6 +124,7 @@
 </template>
 <script>
 import Importar from "../components/ImportarEstudiante.vue";
+import Titulo from "../components/Titulo.vue";
 import Exportar from "../components/ExportarPDF.vue";
 import Nuevo from "../components/Nuevo_Estudiante.vue";
 import Qr from "../components/QR.vue";
@@ -140,6 +134,7 @@ export default {
     Importar,
     Exportar,
     Nuevo,
+    Titulo,
     Qr,
     Abono
   },
@@ -218,7 +213,7 @@ export default {
   }),
   methods: {
     exportar() {
-      this.$store.state.estudiante.modalExportar = true;
+      this.$store.state.exportar = true;
     },
     congresoVuew() {
       this.$store.state.congreso = this.congreso;

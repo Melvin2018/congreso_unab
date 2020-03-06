@@ -1,67 +1,110 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-toolbar class="primary" dark>
-        <v-col cols="12" sm="2">
-          <v-row align="center">
-            <Importar :dialog="importar" :idcongreso="parse" @click="agregar()"></Importar>
-            <Exportar id="exp" :nombre="congreso.nombre" :collection="excel" v-if="personal.length > 0"></Exportar>
-          </v-row>
-        </v-col>
-        <v-col cols="12" sm="4">
-          <v-row justify="center">
-            <v-toolbar-title><h3>Personal</h3></v-toolbar-title>
-          </v-row>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <v-row align="center" justify="center">
-            <v-col cols="12" sm="5">
-              <v-select v-model="tipo" :items="tipos"></v-select>
-            </v-col>
-            <v-col cols="12" sm="7">
-              <v-text-field v-model="busqueda" label="Búsqueda" dense dark append-icon="mdi-magnify"></v-text-field>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-toolbar>
-      <v-card-text>
-        <v-data-table
-          :headers="columnas"
-          :items="personal"
-          :search="busqueda"
-          :page.sync="pagina"
-          :loading="load"
-          :items-per-page="10"
-          loading-text="Cargando..."
-          no-data-text="no hay datos"
-          hide-default-footer
-          class="elevation-1"
-          @page-count="numPagina = $event"
-        >
-          <template v-slot:item.opciones="{ item }">
-            <v-btn fab small @click="eliminar(item.id)" style="margin-left:2%">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </template>
-        </v-data-table>
-        <div class="text-center pt-2">
-          <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
-        </div>
-      </v-card-text>
-    </v-card>
+  <v-container fluid>
+    <v-layout row justify-center align-center>
+      <v-col cols="12" lg="11">
+        <v-card>
+          <v-toolbar dark height="80" color="primary">
+            <v-layout justify-center align-center>
+              <v-flex md2 d-flex>
+                <v-flex md3 d-flex>
+                  <v-btn light fab small @click="importar">
+                    <v-icon>mdi-import</v-icon>
+                  </v-btn>
+                </v-flex>
+                <v-flex md3 d-flex v-if="personal.length > 0">
+                  <v-btn light fab small @click="exportar">
+                    <v-icon>mdi-export</v-icon>
+                  </v-btn>
+                </v-flex>
+                <v-flex md3 d-flex v-if="personal.length > 0">
+                  <v-btn light fab small>
+                    <v-icon>mdi-email</v-icon>
+                  </v-btn>
+                </v-flex>
+                <v-flex md3 d-flex>
+                  <v-btn light fab small @click="agregar">
+                    <v-icon>mdi-account-plus</v-icon>
+                  </v-btn>
+                </v-flex>
+              </v-flex>
+              <v-flex md6 d-flex>
+                <titulo titulo="Personal" />
+              </v-flex>
+              <v-flex md4 d-flex>
+                <v-layout row align-center justify-center>
+                  <v-flex md6 d-flex class="pa-3">
+                    <v-select
+                      dark
+                      filled
+                      dense
+                      color="#E0F7FA"
+                      label="tipo"
+                      v-model="tipo"
+                      :items="tipos"
+                    ></v-select>
+                  </v-flex>
+                  <v-flex md6 d-flex>
+                    <v-text-field
+                      v-model="busqueda"
+                      label="Búsqueda"
+                      dark
+                      filled
+                      dense
+                      color="#E0F7FA"
+                      append-icon="mdi-magnify"
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+              </v-flex>
+            </v-layout>
+          </v-toolbar>
+          <v-card-text>
+            <v-data-table
+              :headers="columnas"
+              :items="personal"
+              :search="busqueda"
+              :page.sync="pagina"
+              :loading="load"
+              :items-per-page="10"
+              loading-text="Cargando..."
+              no-data-text="no hay datos"
+              hide-default-footer
+              class="elevation-1"
+              @page-count="numPagina = $event"
+            >
+              <template v-slot:item.opciones="{ item }">
+                <v-btn fab small @click="eliminar(item)" style="margin-left:2%">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </template>
+            </v-data-table>
+            <div class="text-center pt-2">
+              <v-pagination v-model="pagina" :length="numPagina"></v-pagination>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <importar />
+      <exportar :collection="excel" />
+      <nuevo />
+    </v-layout>
   </v-container>
 </template>
 <script>
-import ImportarExcel from "../components/ImportarPersonal";
-import Exportar from "../components/ExportarPDF";
+import Importar from "../components/ImportarPersonal.vue";
+import Exportar from "../components/ExportarPDF.vue";
+import Nuevo from "../components/Nuevo_Personal.vue";
+import Titulo from "../components/Titulo.vue";
 export default {
   components: {
-    Importar: ImportarExcel,
-    Exportar
+    Importar,
+    Exportar,
+    Titulo,
+    Nuevo
   },
   computed: {
-    parse() {
-      return parseInt(this.$route.params.congreso, 10);
+    personal1() {
+      return this.$store.state.personal.personal;
     }
   },
   watch: {
@@ -70,10 +113,7 @@ export default {
         x === "Todos"
           ? this.listaCompleta
           : this.listaCompleta.filter(r => r.personal.tipo.nombre == x);
-
-      this.excel.find(
-        x => x.nombre === "titulo"
-      ).datos[0].tipo = this.tipo;
+      this.excel.find(x => x.nombre === "titulo").datos[0].tipo = this.tipo;
       this.completo(lista);
     }
   },
@@ -91,12 +131,12 @@ export default {
       { nombre: "personal", datos: [] }
     ],
     congreso: {},
-    importar: false,
     busqueda: "",
-   columnas: [
+    columnas: [
       { text: "Nombre", align: "center", value: "nombre" },
-      { text: "Codigo", align: "center", value: "email" },
+      { text: "Email", align: "center", value: "email" },
       { text: "Tipo", align: "center", value: "tipo" },
+      { text: "Función", align: "center", value: "funcion" },
       { text: "Break Am", align: "center", value: "break_am" },
       { text: "Almuerzo", align: "center", value: "almuerzo" },
       { text: "Break Pm", align: "center", value: "break_pm" },
@@ -104,6 +144,22 @@ export default {
     ]
   }),
   methods: {
+    exportar() {
+      this.$store.state.exportar = true;
+    },
+    congresoVuew() {
+      this.$store.state.congreso = this.congreso;
+    },
+    agregar() {
+      this.$store.state.personal.modalNuevo = true;
+    },
+    importar() {
+      this.$store.state.personal.modalImportar = true;
+    },
+    personalVuex(item) {
+      const est = this.listaCompleta.find(x => x.personal.email === item.email);
+      this.$store.state.personal.personal = est;
+    },
     async listar() {
       const URL = this.$path + "personal/" + this.$route.params.congreso;
       await this.$axios
@@ -146,6 +202,7 @@ export default {
           email: est.email,
           nombre: est.nombre,
           tipo: est.tipo.nombre,
+          funcion: est.funcion,
           asistio: ac.registro === 1 ? "si" : "no",
           break_am: ac.break_am === 1 ? "si" : "no",
           almuerzo: ac.almuerzo === 1 ? "si" : "no",
@@ -214,6 +271,28 @@ export default {
           tipo: this.tipo
         }
       ];
+      this.congresoVuew();
+    },
+    async eliminar(p) {
+      this.personalVuex(p);
+      const id=this.personal1.id;
+      console.log(id);
+      await this.$axios
+        .delete(this.$path.concat("personal_delete?id=").concat(id))
+        .then(x => {
+          if (x.data.respuesta) {
+            this.personal.splice(this.personal.indexOf(p), 1);
+          } else {
+            Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: "No es posible eliminar este personal",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        })
+        .catch(e => console.log(e));
     }
   },
   mounted() {

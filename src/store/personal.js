@@ -2,9 +2,7 @@ export default {
     state: {
         modalNuevo: false,
         modalImportar: false,
-        modalQr: false,
-        modalAbonar: false,
-        estudiante: {}
+        personal: {}
     },
     mutations: {},
     actions: {},
