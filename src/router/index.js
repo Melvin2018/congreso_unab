@@ -9,11 +9,6 @@ import Estadisticas from '@/views/Estadisticas.vue'
 Vue.use(VueRouter);
 const routes = [{
         path: "/",
-        name: "inicio",
-        component: Home
-    },
-    {
-        path: "/evento/vista",
         name: "evento",
         component: Evento
     },

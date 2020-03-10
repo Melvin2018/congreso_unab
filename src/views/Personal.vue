@@ -17,7 +17,7 @@
                   </v-btn>
                 </v-flex>
                 <v-flex md3 d-flex v-if="personal.length > 0">
-                  <v-btn light fab small>
+                  <v-btn light fab small @click="correo">
                     <v-icon>mdi-email</v-icon>
                   </v-btn>
                 </v-flex>
@@ -147,6 +147,10 @@ export default {
     exportar() {
       this.$store.state.exportar = true;
     },
+    async correo() {
+      const URL = this.$path.concat("emails/" + this.congreso.id + "?tipo=2");
+      await this.$axios.put(URL).catch(e => console.log(e));
+    },
     congresoVuew() {
       this.$store.state.congreso = this.congreso;
     },
@@ -275,7 +279,7 @@ export default {
     },
     async eliminar(p) {
       this.personalVuex(p);
-      const id=this.personal1.id;
+      const id = this.personal1.id;
       console.log(id);
       await this.$axios
         .delete(this.$path.concat("personal_delete?id=").concat(id))

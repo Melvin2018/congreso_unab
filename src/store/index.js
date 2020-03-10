@@ -8,6 +8,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         modalEvento: false,
+        modalCarrera: false,
         exportar: false,
         congreso: {}
     },

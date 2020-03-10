@@ -17,7 +17,7 @@
                   </v-btn>
                 </v-flex>
                 <v-flex md3 d-flex v-if="estudiantes.length > 0">
-                  <v-btn light fab small>
+                  <v-btn light fab small @click="correo">
                     <v-icon>mdi-email</v-icon>
                   </v-btn>
                 </v-flex>
@@ -269,6 +269,10 @@ export default {
       this.listaCompleta.find(
         x => x.estudiante.codigo === estudiante.codigo
       ).pagado = 1;
+    },
+    async correo() {
+      const URL = this.$path.concat("emails/" + this.congreso.id + "?tipo=1");
+      await this.$axios.put(URL).catch(e => console.log(e));
     },
     async listar() {
       const URL = this.$path + "estudiantes/" + this.$route.params.congreso;

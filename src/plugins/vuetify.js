@@ -1,11 +1,21 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
+import '@mdi/font/css/materialdesignicons.css'
 import colors from 'vuetify/lib/util/colors';
 import es from 'vuetify/es5/locale/es';
 
 Vue.use(Vuetify);
 
+const MY_ICONS = {
+    product: 'mdi-dropbox',
+    support: 'mdi-lifebuoy',
+    steam: 'mdi-steam-box',
+    pc: 'mdi-desktop-classic',
+    xbox: 'mdi-xbox',
+    playstation: 'mdi-playstation',
+    switch: 'mdi-nintendo-switch',
+}
 export default new Vuetify({
     theme: {
         options: {
@@ -25,10 +35,20 @@ export default new Vuetify({
                 success: '#4CAF50',
                 warning: '#FFC107'
             },
+            dark: {
+                primary: colors.blue.lighten3,
+            },
         },
     },
+    icons: {
+        iconfont: 'mdi',
+        values: MY_ICONS
+    },
+
     lang: {
-        locales: { es },
+        locales: {
+            es
+        },
         current: 'es',
     },
 });

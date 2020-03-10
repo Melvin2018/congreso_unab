@@ -1,14 +1,22 @@
 <template>
-  <v-container class="flex-small-windows">
-    <v-layout row wrap>
+  <v-container>
+    <v-layout>
       <v-flex>
         <v-card>
           <v-toolbar dark color="primary" height="80">
             <v-layout align-center justify-space-around>
               <v-flex md2>
-                <v-btn small fab dark color="success" @click="modal()">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
+                <v-layout justify-start row>
+                  <v-btn fab @click="modal()" class="mr-3">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                  <v-btn fab @click="carrera(0)" class="mr-3">
+                    <v-icon>mdi-book-variant</v-icon>
+                  </v-btn>
+                  <v-btn fab dark @click="carrera(1)" color="gray">
+                    <v-icon>mdi-map-marker</v-icon>
+                  </v-btn>
+                </v-layout>
               </v-flex>
               <v-flex md6>
                 <titulo titulo="Congresos" />
@@ -106,12 +114,18 @@
                           :elevation="hover ? 24 : 4"
                           :class="{ 'on-hover': hover }"
                         >
-                          <v-img class="black--text align-start" :src="evento.fondo" height="260px">
-                            <v-layout
-                              class="my-4 mx-4 text-center"
-                              style="background-color: transparent;"
-                              column
-                            >
+                          <v-img
+                            aspect-ratio="1"
+                            :src="evento.fondo"
+                            height="260px"
+                            gradient="to top, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                          >
+                            <template v-slot:placeholder>
+                              <v-row class="fill-height ma-0" align="center" justify="center">
+                                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                              </v-row>
+                            </template>
+                            <v-layout class="my-4 mx-4 text-center" column>
                               <v-layout row align-start justify-space-around>
                                 <h1 class="sombreado">{{ evento.nombre }}</h1>
                                 <h1 class="sombreado">{{evento.lugar.nombre}}</h1>
@@ -119,8 +133,9 @@
                             </v-layout>
                           </v-img>
                           <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <h2>{{ evento.fecha }}</h2>
+                            <div class="ml-5">
+                              <h2 dark>{{ evento.fecha }}</h2>
+                            </div>
                             <v-spacer></v-spacer>
                             <v-btn
                               outlined
@@ -135,9 +150,6 @@
                             <v-btn outlined @click="listar(evento, 'estadistica')" color="orange">
                               <v-icon>mdi-graph</v-icon>estadisticas
                             </v-btn>
-                            <v-btn outlined @click="eliminar(evento)" color="red">
-                              <v-icon>mdi-delete</v-icon>
-                            </v-btn>
                           </v-card-actions>
                         </v-card>
                       </v-hover>
@@ -150,17 +162,20 @@
           <nuevo @evento="nuevoCongreso" />
         </v-card>
       </v-flex>
+      <carrera :tipo="tipo" />
     </v-layout>
   </v-container>
 </template>
 <script>
 import Nuevo from "@/components/Nuevo_Evento.vue";
+import carrera from "../components/CarreraAdd";
 import Titulo from "@/components/Titulo.vue";
 import Swal from "sweetalert2";
 export default {
   components: {
     Nuevo,
-    Titulo
+    Titulo,
+    carrera
   },
   computed: {
     activos() {
@@ -173,6 +188,7 @@ export default {
   data: () => ({
     load: true,
     tabs: null,
+    tipo: 0,
     pagina: 1,
     numPagina: 0,
     eventos: [],
@@ -185,6 +201,10 @@ export default {
     },
     modal() {
       this.$store.state.modalEvento = true;
+    },
+    carrera(tipo) {
+      this.tipo = tipo;
+      this.$store.state.modalCarrera = true;
     },
     async eliminar(congreso) {
       const URL = this.$path + "congresos";
@@ -235,11 +255,9 @@ export default {
   },
   watch: {
     busqueda: function(x) {
-      console.log(
-        (this.eventos = this.todos.filter(function(el) {
-          return el.nombre.toLowerCase().indexOf(x.toLowerCase()) > -1;
-        }))
-      );
+      this.eventos = this.todos.filter(function(el) {
+        return el.nombre.toLowerCase().indexOf(x.toLowerCase()) > -1;
+      });
     }
   },
   mounted() {

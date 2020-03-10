@@ -81,6 +81,7 @@ export default {
         .get(URL)
         .then(response => {
           this.datos = response.data.estadisticas;
+          this.$store.state.estadisticas.congreso=response.data.congreso;
         })
         .catch(e =>
           this.$router.push({

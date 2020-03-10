@@ -179,7 +179,7 @@ export default {
           })
         );
       const lu = this.lugares;
-      this.evento.lugar = lu ? lu[0].id : "";
+      this.evento.lugar = lu.length>0? lu[0].id : "";
     },
     async listarCategorias() {
       await this.$axios
@@ -196,7 +196,7 @@ export default {
           })
         );
       const lu = this.categorias;
-      this.categoria = lu ? lu[0].nombre : "";
+      this.categoria = lu.length>0 ? lu[0].nombre : "";
     },
     async listarFondos() {
       await this.$axios

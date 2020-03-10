@@ -4,7 +4,7 @@
       <v-card>
         <v-toolbar dark color="primary" height="50">
           <v-col cols="12" lg="11">
-            <titulo titulo="Nuevo Estudiante" />
+            <titulo titulo="Nuevo Personal" />
           </v-col>
           <v-btn text icon @click="close" color="black">
             <v-icon>mdi-close</v-icon>

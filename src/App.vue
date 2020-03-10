@@ -56,12 +56,6 @@ export default {
     opciones: [
       {
         ruta: "/",
-        titulo: "Inicio",
-        img:
-          "https://cdn3.iconfinder.com/data/icons/education-vol-1-outline-1/96/Artboard_41-512.png"
-      },
-      {
-        ruta: "/evento/vista",
         titulo: "Congresos",
         img:
           "https://cdn3.iconfinder.com/data/icons/election-world-1/64/senate-congress-government-senator-political-512.png"

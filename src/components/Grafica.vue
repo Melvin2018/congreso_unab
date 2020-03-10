@@ -37,7 +37,7 @@ export default {
       if (!this.chartsLib) return null;
       return this.chartsLib.charts.Bar.convertOptions({
         chart: {
-          title: "Congreso de enfermeria",
+          title: this.congreso.nombre,
           subtitle: "Esperados y registrados, durante el congreso"
         },
         bars: "vertical",
@@ -46,6 +46,10 @@ export default {
 
         colors: ["#9C27B0", "#1DE9B6"]
       });
+    },
+    congreso() {
+      const cong = this.$store.state.estadisticas.congreso;
+      return cong ? cong : { nombre: "" };
     }
   },
   watch: {

@@ -3,7 +3,8 @@ export default {
         data: [],
         columnas: [],
         estudiantes: [],
-        personal: []
+        personal: [],
+        congreso: []
     },
     mutations: {},
     actions: {},
