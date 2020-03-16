@@ -73,6 +73,9 @@
               @page-count="numPagina = $event"
             >
               <template v-slot:item.opciones="{ item }">
+                <v-btn fab small @click="qr(item)" style="margin-left:2%">
+                  <v-icon>mdi-qrcode</v-icon>
+                </v-btn>
                 <v-btn fab small @click="eliminar(item)" style="margin-left:2%">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
@@ -84,6 +87,7 @@
           </v-card-text>
         </v-card>
       </v-col>
+      <qr />
       <importar />
       <exportar :collection="excel" />
       <nuevo />
@@ -95,12 +99,14 @@ import Importar from "../components/ImportarPersonal.vue";
 import Exportar from "../components/ExportarPDF.vue";
 import Nuevo from "../components/Nuevo_Personal.vue";
 import Titulo from "../components/Titulo.vue";
+import Qr from "../components/QR1.vue";
 export default {
   components: {
     Importar,
     Exportar,
     Titulo,
-    Nuevo
+    Nuevo,
+    Qr
   },
   computed: {
     personal1() {
@@ -156,6 +162,10 @@ export default {
     },
     agregar() {
       this.$store.state.personal.modalNuevo = true;
+    },
+    qr(item) {
+      this.personalVuex(item);
+      this.$store.state.personal.modalQr = true;
     },
     importar() {
       this.$store.state.personal.modalImportar = true;

@@ -81,7 +81,7 @@ export default {
         .get(URL)
         .then(response => {
           this.datos = response.data.estadisticas;
-          this.$store.state.estadisticas.congreso=response.data.congreso;
+          this.$store.state.estadisticas.congreso = response.data.congreso;
         })
         .catch(e =>
           this.$router.push({
@@ -102,11 +102,94 @@ export default {
     },
     actulizar() {
       this.$router.go();
+    },
+    personal() {
+      let obj = {
+        total: 0,
+        registrados: 0,
+        break_am: 0,
+        almuerzo: 0,
+        break_pm: 0
+      };
+      const personal = this.datos[1].personal;
+      obj.total += personal.Autoridad.total;
+      obj.total += personal.Invitado.total;
+      obj.total += personal.Docente.total;
+      obj.total += personal.Ponente.total;
+      obj.total += personal.Equipo.total;
+      obj.registrados += personal.Autoridad.registrados;
+      obj.registrados += personal.Invitado.registrados;
+      obj.registrados += personal.Docente.registrados;
+      obj.registrados += personal.Ponente.registrados;
+      obj.registrados += personal.Equipo.registrados;
+      obj.break_am += personal.Autoridad.break_am;
+      obj.break_am += personal.Invitado.break_am;
+      obj.break_am += personal.Docente.break_am;
+      obj.break_am += personal.Ponente.break_am;
+      obj.break_am += personal.Equipo.break_am;
+      obj.almuerzo += personal.Autoridad.almuerzo;
+      obj.almuerzo += personal.Invitado.almuerzo;
+      obj.almuerzo += personal.Docente.almuerzo;
+      obj.almuerzo += personal.Ponente.almuerzo;
+      obj.almuerzo += personal.Equipo.almuerzo;
+      obj.break_pm += personal.Autoridad.break_pm;
+      obj.break_pm += personal.Invitado.break_pm;
+      obj.break_pm += personal.Docente.break_pm;
+      obj.break_pm += personal.Ponente.break_pm;
+      obj.break_pm += personal.Equipo.break_pm;
+      const lista = this.lista(obj);
+      this.$store.state.estadisticas.personal = lista;
+      return lista;
+    },
+    estudiantes() {
+      let obj = {
+        total: 0,
+        registrados: 0,
+        break_am: 0,
+        almuerzo: 0,
+        break_pm: 0
+      };
+      console.log(this.datos);
+      const estudiantes = this.datos[0].estudiantes;
+      obj.total += estudiantes.SS.total;
+      obj.total += estudiantes.CH.total;
+      obj.total += estudiantes.SM.total;
+      obj.total += estudiantes.SO.total;
+      obj.registrados += estudiantes.SS.registrados;
+      obj.registrados += estudiantes.CH.registrados;
+      obj.registrados += estudiantes.SM.registrados;
+      obj.registrados += estudiantes.SO.registrados;
+      obj.break_am += estudiantes.SS.break_am;
+      obj.break_am += estudiantes.CH.break_am;
+      obj.break_am += estudiantes.SM.break_am;
+      obj.break_am += estudiantes.SO.break_am;
+      obj.almuerzo += estudiantes.SS.almuerzo;
+      obj.almuerzo += estudiantes.CH.almuerzo;
+      obj.almuerzo += estudiantes.SM.almuerzo;
+      obj.almuerzo += estudiantes.SO.almuerzo;
+      obj.break_pm += estudiantes.SS.break_pm;
+      obj.break_pm += estudiantes.CH.break_pm;
+      obj.break_pm += estudiantes.SM.break_pm;
+      obj.break_pm += estudiantes.SO.break_pm;
+      const lista = this.lista(obj);
+      this.$store.state.estadisticas.estudiantes = lista;
+      return lista;
+    },
+    lista(obj) {
+      let lista = [];
+      lista.push({ name: "Total", cantidad: obj.total });
+      lista.push({ name: "Registrados", cantidad: obj.registrados });
+      lista.push({ name: "Break AM", cantidad: obj.break_am });
+      lista.push({ name: "Almuerzo", cantidad: obj.almuerzo });
+      lista.push({ name: "Break PM", cantidad: obj.break_pm });
+      return lista;
     }
   },
   mounted() {
     this.listar();
     this.columnas();
+    this.estudiantes();
+    this.personal();
   }
 };
 </script>

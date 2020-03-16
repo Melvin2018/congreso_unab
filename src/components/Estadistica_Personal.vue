@@ -40,6 +40,9 @@ export default {
     store() {
       return this.$store.state.estadisticas;
     },
+    personalVuew() {
+      this.store.personal;
+    },
     data() {
       return this.store.data;
     },
@@ -53,7 +56,7 @@ export default {
         const personal = this.data[1].personal;
         this.personal =
           this.tipo == "todos"
-            ? this.todos(personal)
+            ? this.personalVuew
             : this.tipo_personal(personal);
       }
     },
@@ -65,7 +68,6 @@ export default {
         almuerzo: 0,
         break_pm: 0
       };
-
       obj.total += personal.Autoridad.total;
       obj.total += personal.Invitado.total;
       obj.total += personal.Docente.total;
@@ -127,15 +129,7 @@ export default {
       obj.break_pm += tipo.break_pm;
       return this.lista(obj);
     },
-    lista(obj) {
-      let lista = [];
-      lista.push({ name: "Total", cantidad: obj.total });
-      lista.push({ name: "Registrados", cantidad: obj.registrados });
-      lista.push({ name: "Break AM", cantidad: obj.break_am });
-      lista.push({ name: "Almuerzo", cantidad: obj.almuerzo });
-      lista.push({ name: "Break PM", cantidad: obj.break_pm });
-      return lista;
-    },
+
     async listartipo() {
       await this.$axios
         .get(this.$path.concat("tipos"))

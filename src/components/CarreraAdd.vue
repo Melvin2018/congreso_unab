@@ -56,16 +56,23 @@ export default {
     valido: true,
     nombre: ""
   }),
+  watch: {
+    tipo: function(x) {
+      this.nombre = "";
+    }
+  },
   methods: {
     async onClick() {
       if (this.$refs.form.validate()) {
-        const URL = this.$path;
+        let URL = this.$path;
         if (this.tipo == 0) {
           URL += "carreras";
         } else if (this.tipo == 1) {
           URL += "lugares";
         }
-        await this.$axios.post(URL, this.nombre).catch(e => console.log(e));
+        await this.$axios
+          .post(URL, { nombre: this.nombre })
+          .catch(e => console.log(e));
         this.close();
       }
     },

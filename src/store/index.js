@@ -10,7 +10,8 @@ export default new Vuex.Store({
         modalEvento: false,
         modalCarrera: false,
         exportar: false,
-        congreso: {}
+        modalFondo: false,
+        congreso: {},
     },
     mutations: {},
     actions: {},

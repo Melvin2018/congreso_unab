@@ -4,9 +4,9 @@
       <v-card>
         <v-toolbar color="green" height="50">
           <v-col cols="12" lg="11">
-           <titulo titulo="Nuevo congreso"/>
+            <titulo titulo="Nuevo congreso" />
           </v-col>
-           <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
           <v-btn text icon @click="close" color="black">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -14,7 +14,8 @@
         <v-card-text>
           <v-layout row justify-center>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-text-field color="green"
+              <v-text-field
+                color="green"
                 id="nombre"
                 label="Nombre del evento"
                 v-model="evento.nombre"
@@ -34,7 +35,8 @@
                 min-width="290px"
               >
                 <template v-slot:activator="{ on }">
-                  <v-text-field color="green"
+                  <v-text-field
+                    color="green"
                     v-model="evento.fecha"
                     label="fecha del evento"
                     prepend-icon="mdi-calendar-range"
@@ -47,7 +49,8 @@
               </v-menu>
             </v-flex>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-text-field color="green"
+              <v-text-field
+                color="green"
                 v-model.number="evento.precio"
                 type="number"
                 :counter="3"
@@ -58,7 +61,8 @@
               ></v-text-field>
             </v-flex>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-select color="green"
+              <v-select
+                color="green"
                 v-model="evento.lugar"
                 label="Lugar"
                 item-value="id"
@@ -67,7 +71,8 @@
               ></v-select>
             </v-flex>
             <v-flex xl8 lg8 md8 sm8 xs8>
-              <v-select color="green"
+              <v-select
+                color="green"
                 v-model="categoria"
                 label="Categoria"
                 item-text="nombre"
@@ -111,7 +116,7 @@
 <script>
 import Titulo from "@/components/Titulo.vue";
 export default {
-  components:{
+  components: {
     Titulo
   },
   computed: {
@@ -158,6 +163,7 @@ export default {
         await this.$axios.post(URL, this.evento).catch(e => console.log(e));
         this.$emit("evento", this.evento);
         this.close();
+        this.$router.go();
       }
     },
     async reset() {
@@ -179,7 +185,7 @@ export default {
           })
         );
       const lu = this.lugares;
-      this.evento.lugar = lu.length>0? lu[0].id : "";
+      this.evento.lugar = lu.length > 0 ? lu[0].id : "";
     },
     async listarCategorias() {
       await this.$axios
@@ -196,7 +202,7 @@ export default {
           })
         );
       const lu = this.categorias;
-      this.categoria = lu.length>0 ? lu[0].nombre : "";
+      this.categoria = lu.length > 0 ? lu[0].nombre : "";
     },
     async listarFondos() {
       await this.$axios

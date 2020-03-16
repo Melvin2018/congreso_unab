@@ -7,14 +7,17 @@
             <v-layout align-center justify-space-around>
               <v-flex md2>
                 <v-layout justify-start row>
-                  <v-btn fab @click="modal()" class="mr-3">
+                  <v-btn light small fab @click="modal()" class="mr-3">
                     <v-icon>mdi-plus</v-icon>
                   </v-btn>
-                  <v-btn fab @click="carrera(0)" class="mr-3">
+                  <v-btn light small fab @click="carrera(0)" class="mr-3">
                     <v-icon>mdi-book-variant</v-icon>
                   </v-btn>
-                  <v-btn fab dark @click="carrera(1)" color="gray">
+                  <v-btn light small fab @click="carrera(1)" class="mr-3">
                     <v-icon>mdi-map-marker</v-icon>
+                  </v-btn>
+                  <v-btn light small fab @click="fondo">
+                    <v-icon>mdi-wallpaper</v-icon>
                   </v-btn>
                 </v-layout>
               </v-flex>
@@ -162,6 +165,7 @@
           <nuevo @evento="nuevoCongreso" />
         </v-card>
       </v-flex>
+      <fondo />
       <carrera :tipo="tipo" />
     </v-layout>
   </v-container>
@@ -169,13 +173,15 @@
 <script>
 import Nuevo from "@/components/Nuevo_Evento.vue";
 import carrera from "../components/CarreraAdd";
+import fondo from "../components/fondoAdd";
 import Titulo from "@/components/Titulo.vue";
 import Swal from "sweetalert2";
 export default {
   components: {
     Nuevo,
     Titulo,
-    carrera
+    carrera,
+    fondo
   },
   computed: {
     activos() {
@@ -201,6 +207,9 @@ export default {
     },
     modal() {
       this.$store.state.modalEvento = true;
+    },
+    fondo() {
+      this.$store.state.modalFondo = true;
     },
     carrera(tipo) {
       this.tipo = tipo;
